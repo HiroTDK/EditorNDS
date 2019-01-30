@@ -242,5 +242,5 @@ ModelManifest.xml
 .fake/
 
 #Customs
-.rar
-.zip
+*.rar
+*.zip
