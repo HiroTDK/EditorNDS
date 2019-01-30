@@ -45,62 +45,74 @@ namespace EditorNDS.FileHandlers
 			switch ( System.Text.Encoding.UTF8.GetString(firstFour) )
 			{
 				// Archives
-				case "NARC":
+				case "NARC":	// NITRO Archive
 					Extension = ".narc";
 					break;
-				case "SDAT":
+				case "SDAT":	// Sound Data Archive
 					Extension = ".sdat";
 					break;
 
-				// Graphics
-				case "RLCN":
-					Extension = ".nclr";
-					break;
-				case "RGCN":
-					Extension = ".ncgr";
-					break;
-				case "RCSN":
-					Extension = ".nscr";
-					break;
-				case "RNAN":
-					Extension = ".nanr";
-					break;
-				case "RECN":
+				// 2D Graphics
+				case "RECN":    // Cell Definition Information
 					Extension = ".ncer";
 					break;
-				case "RCMN":
+				case "RNAN":    // Animation Definition Information
+					Extension = ".nanr";
+					break;
+				case "RMAN":    // Animation Definition Information
+					Extension = ".namr";
+					break;
+				case "RGCN":    // Character Information
+					Extension = ".ncgr";
+					break;
+				case "RBCN":    // Character Information
+					Extension = ".ncbr";
+					break;
+				case "RLCN":	// Color Palette Information
+					Extension = ".nclr";
+					break;
+				case "RCMN":    // MultiCell Information
 					Extension = ".nmcr";
 					break;
-				case " APS":
-					Extension = ".spa";
+				case "RNEN":    // Entity Information 
+					Extension = ".nenr";
+					break;
+				case "RCSN":	// Screen Information
+					Extension = ".nscr";
+					break;
+				case "RTFN":    // Font Information
+					Extension = ".nftr";
 					break;
 
-				// Models
-				case "BMD0":
+				// 3D Graphics
+				case "BMD0":	// Model Data File
 					Extension = ".nsbmd";
 					break;
-				case "BTX0":
+				case "BTX0":	// Texture Data File
 					Extension = ".nsbtx";
 					break;
-				case "BCA0":
+				case "BCA0":    // Joint Animation Data File
 					Extension = ".nsbca";
 					break;
-				case "BVA0":
-					Extension = ".nsbva";
-					break;
-				case "BMA0":
-					Extension = ".nsbma";
-					break;
-				case "BTP0":
+				case "BTP0":    // Texture Pattern Animation Data File
 					Extension = ".nsbtp";
 					break;
-				case "BTA0":
+				case "BMA0":    // Material Color Animation Data File
+					Extension = ".nsbma";
+					break;
+				case "BVA0":	// Visibility Animation Data File
+					Extension = ".nsbva";
+					break;
+				case "BTA0":	// Texture SRT Animation Data File
 					Extension = ".nsbta";
 					break;
 
 				// Others
 				case "MESG":
 					Extension = ".mesg";
+					break;
+				case " APS":    // Particle File
+					Extension = ".spa";
 					break;
 
 				// Malformed Header in HG/SS

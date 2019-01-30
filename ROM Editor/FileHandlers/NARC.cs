@@ -144,29 +144,29 @@ namespace EditorNDS.FileHandlers
 
 		// Header Data
 		const uint Signature = 1129464142;		// 0x0		File Signature (N,A,R,C)
-		const ushort ByteOrder = 65534;		// 0x4		Byte Order Marks (0xFEFF)
+		const ushort ByteOrder = 65534;			// 0x4		Byte Order Marks (0xFEFF)
 		const ushort Version = 256;             // 0x6		Archive Format Version (0x0100)
-		//uint FileSize = 0;				// 0x8		Archive File Size
+		//uint FileSize = 0;					// 0x8		Archive File Size
 		const ushort HeaderSize = 16;			// 0xC		Archive Header Size (0x10)
 		const ushort DataBlocks = 3;			// 0xE		Number Of Data Blocks (0x3)
 
-		// FATB Data Block					// ?			[HeaderSize]
+		// FATB Data Block						// ?		[HeaderSize]
 		const uint SignatureFAT = 1178686530;	// 0x0		Data Block Type (FATB)
 		uint SizeFAT = 0;                       // 0x4		Allocation Table Size
 		ushort FilesFAT = 0;                    // 0x8		Number Of Files In Allocation Table
-		// Reserved [FAT]					// 0xA		Reserved (0x0000)
-		// FATB		                         // 0xC		File Allocation Table
+		// Reserved [FAT]						// 0xA		Reserved (0x0000)
+		// FATB									// 0xC		File Allocation Table
 
-		// FNTB Data Block					// ?			[HeaderSize + SizeFAT]
+		// FNTB Data Block						// ?		[HeaderSize + SizeFAT]
 		const uint SignatureFNT = 1179538498;	// 0x0		Data Block Type (FNTB)
 		uint SizeFNT = 0;                       // 0x4		Name Table Size
-		// FNTB;							// 0x8		File Name Table
-		// Padding (Optional)				// ?			[Optional Boundary Alignment]
+		// FNTB;								// 0x8		File Name Table
+		// Padding (Optional)					// ?		[Optional Boundary Alignment]
 
-		// FIMG Data Block					// ?			[HeaderSize + SizeFAT + SizeFNT + Padding]
+		// FIMG Data Block						// ?		[HeaderSize + SizeFAT + SizeFNT + Padding]
 		const uint SignatureIMG = 1179209031;	// 0x0		Data Block Type (FIMG)
 		uint SizeIMG = 0;                       // 0x4		Image File Size
 		//byte[] FIMG;                          // 0x8		Image File
-		// Padding (Required)				// ?			[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
+		// Padding (Required)					// ?		[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
 	}
 }
