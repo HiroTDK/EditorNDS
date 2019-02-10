@@ -79,6 +79,32 @@ namespace EditorNDS.TabbedInterface
 				}
 			}
 		}
+		private void UpdateTabs()
+		{
+			foreach (Tab tab in tabList)
+			{
+				if (!tabVisibility.Contains(tab) && tabStrip.Controls.Contains(tab.tabLabel))
+				{
+					tabStrip.Controls.Remove(tab.tabLabel);
+				}
+			}
+
+			int iteration = 0;
+			foreach (Tab tab in tabVisibility)
+			{
+				if (!tabStrip.Controls.Contains(tab.tabLabel))
+				{
+
+					tabStrip.Controls.Add(tab.tabLabel);
+				}
+
+				tab.tabLabel.Left = iteration * tabWidth;
+				tab.tabLabel.Width = tabWidth;
+				tab.tabLabel.Invalidate();
+				toolTip.SetToolTip(tab.tabLabel, tab.tabTitle);
+				iteration++;
+			}
+		}
 		public void UpdateTabStrip()
 		{
 			if (tabList.Count * TabManager.maximumTabWidth <= tabStrip.Width)
@@ -153,32 +179,6 @@ namespace EditorNDS.TabbedInterface
 			}
 
 			UpdateTabs();
-		}
-		private void UpdateTabs()
-		{
-			foreach (Tab tab in tabList)
-			{
-				if (!tabVisibility.Contains(tab) && tabStrip.Controls.Contains(tab.tabLabel))
-				{
-					tabStrip.Controls.Remove(tab.tabLabel);
-				}
-			}
-
-			int iteration = 0;
-			foreach (Tab tab in tabVisibility)
-			{
-				if (!tabStrip.Controls.Contains(tab.tabLabel))
-				{
-
-					tabStrip.Controls.Add(tab.tabLabel);
-				}
-
-				tab.tabLabel.Left = iteration * tabWidth;
-				tab.tabLabel.Width = tabWidth;
-				tab.tabLabel.Invalidate();
-				toolTip.SetToolTip(tab.tabLabel, tab.tabTitle);
-				iteration++;
-			}
 		}
 
 		public void OpenTab(Tab tab)
@@ -259,10 +259,11 @@ namespace EditorNDS.TabbedInterface
 			};
 			tabLabel.MouseEnter += new EventHandler(this.tabLabel_MouseEnter);
 			tabLabel.MouseLeave += new EventHandler(this.tabLabel_MouseLeave);
-			tabLabel.MouseCaptureChanged += new EventHandler(this.tabLabel_MouseCaptureChanged);
 			tabLabel.MouseMove += new MouseEventHandler(this.tabLabel_MouseMove);
 			tabLabel.MouseDown += new MouseEventHandler(this.tabLabel_MouseDown);
 			tabLabel.MouseUp += new MouseEventHandler(this.tabLabel_MouseUp);
+			tabLabel.MouseClick += new MouseEventHandler(this.tabLabel_MouseClick);
+			tabLabel.MouseCaptureChanged += new EventHandler(this.tabLabel_MouseCaptureChanged);
 
 			tabLabel.tabParent = this;
 			tabInterface = tab_interface;
@@ -332,62 +333,19 @@ namespace EditorNDS.TabbedInterface
 		}
 		private void tabLabel_MouseDown(object sender, MouseEventArgs e)
 		{
-			switch (e.Button)
+			if (e.Button == MouseButtons.Left)
 			{
-				case MouseButtons.Left:
-					{
-						if (e.X >= tabLabel.Width - 18 && e.X < tabLabel.Width - 2 && e.Y <= 18 && e.Y > 2)
-						{
-							mouseCloseDown = true;
-							tabLabel.Invalidate();
-						}
-						else
-						{
-							mouseDownLocation = e.Location;
-							initialLeft = tabLabel.Left;
-							tabInterface.ActivateTab(this);
-							tabLabel.BringToFront();
-						}
-					}
-					break;
-				case MouseButtons.Right:
-					{
-						ContextMenu context_menu = new ContextMenu
-							(new MenuItem[] {
-								new MenuItem("Save"),
-								new MenuItem("Save All"),
-								new MenuItem(),
-								new MenuItem("Close"),
-								new MenuItem("Close All"),
-								new MenuItem("Close All But This")
-							});
-						tabLabel.ContextMenu = context_menu;
-					}
-					break;
-			}
-
-			if (e.Button == System.Windows.Forms.MouseButtons.Left)
-			{
-				int width = tabLabel.Width;
-				if (e.X >= width - 18 && e.X < width - 2 && e.Y <= 18 && e.Y > 2)
+				if (e.X >= tabLabel.Width - 18 && e.X < tabLabel.Width - 2 && e.Y <= 18 && e.Y > 2)
 				{
-					if (!mouseCloseDown)
-					{
-						mouseCloseDown = true;
-						tabLabel.Invalidate();
-					}
+					mouseCloseDown = true;
+					tabLabel.Invalidate();
 				}
 				else
 				{
-					if (mouseCloseDown)
-					{
-						mouseCloseDown = false;
-						tabLabel.Invalidate();
-					}
-
 					mouseDownLocation = e.Location;
 					initialLeft = tabLabel.Left;
 					tabInterface.ActivateTab(this);
+					tabLabel.BringToFront();
 				}
 			}
 		}
@@ -407,6 +365,22 @@ namespace EditorNDS.TabbedInterface
 				}
 			}
 		}
+		private void tabLabel_MouseClick(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				ContextMenu context_menu = new ContextMenu
+					(new MenuItem[] {
+						new MenuItem("Save"),
+						new MenuItem("Save All"),
+						new MenuItem(),
+						new MenuItem("Close", new EventHandler(this.contextMenu_Close_MouseClick)),
+						new MenuItem("Close All", new EventHandler(this.contextMenu_CloseAll_MouseClick)),
+						new MenuItem("Close All But This", new EventHandler(this.contextMenu_CloseAllButThis_MouseClick))
+					});
+				tabLabel.ContextMenu = context_menu;
+			}
+		}
 		private void tabLabel_MouseCaptureChanged(object sender, EventArgs e)
 		{
 			if (!mouseDownLocation.IsEmpty)
@@ -418,6 +392,32 @@ namespace EditorNDS.TabbedInterface
 			{
 				mouseCloseDown = false;
 				tabLabel.Invalidate();
+			}
+		}
+		
+		private void contextMenu_Close_MouseClick(object sender, EventArgs e)
+		{
+			tabInterface.CloseTab(this);
+		}
+		private void contextMenu_CloseAll_MouseClick(object sender, EventArgs e)
+		{
+			foreach (Tab tab in tabInterface.tabList.ToList())
+			{
+				if (this != tab)
+				{
+					tabInterface.CloseTab(tab);
+				}	
+			}
+			tabInterface.CloseTab(this);
+		}
+		private void contextMenu_CloseAllButThis_MouseClick(object sender, EventArgs e)
+		{
+			foreach (Tab tab in tabInterface.tabList.ToList())
+			{
+				if (this != tab)
+				{
+					tabInterface.CloseTab(tab);
+				}	
 			}
 		}
 	}
