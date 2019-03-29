@@ -32,9 +32,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,26 +56,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomClasses.cs" />
-    <Compile Include="MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MessageBox.Designer.cs">
-      <DependentUpon>MessageBox.cs</DependentUpon>
-    </Compile>
+    <Compile Include="FileHandlers\NDS File Table.cs" />
+    <Compile Include="FileHandlers\NDS Header.cs" />
+    <Compile Include="FileHandlers\NDS ROM.cs" />
     <Compile Include="FileHandlers\NDS File.cs" />
     <Compile Include="FileHandlers\NARC.cs" />
     <Compile Include="FileHandlers\PokeTextIV.cs" />
-    <Compile Include="NewProject.cs">
+    <Compile Include="Forms\MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MessageBox.Designer.cs">
+      <DependentUpon>MessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NewProject.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NewProject.Designer.cs">
+    <Compile Include="Forms\NewProject.Designer.cs">
       <DependentUpon>NewProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ROMViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ROMViewer.Designer.cs">
+      <DependentUpon>ROMViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="PokemonEditor\PokedexText.cs">
       <SubType>UserControl</SubType>
@@ -89,14 +107,17 @@
     <Compile Include="TabbedInterface\TabInterface.Designer.cs">
       <DependentUpon>TabInterface.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainWindow.resx">
+    <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MessageBox.resx">
+    <EmbeddedResource Include="Forms\MessageBox.resx">
       <DependentUpon>MessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewProject.resx">
+    <EmbeddedResource Include="Forms\NewProject.resx">
       <DependentUpon>NewProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ROMViewer.resx">
+      <DependentUpon>ROMViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PokemonEditor\PokedexText.resx">
       <DependentUpon>PokedexText.cs</DependentUpon>

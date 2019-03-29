@@ -12,13 +12,8 @@ namespace EditorNDS.FileHandlers
 			    Files        
 	\*--------------------------*/
 
-	public class NDSFile
+	public struct NDSFile
 	{
-		public NDSFile()
-		{
-
-		}
-
 		public NDSFile(string name, string path, string extension, int offset, int length)
 		{
 			Name = name;
@@ -59,13 +54,13 @@ namespace EditorNDS.FileHandlers
 				case "RNAN":    // Animation Definition Information
 					Extension = ".nanr";
 					break;
-				case "RMAN":    // Animation Definition Information
+				case "RMAN":    // Mutlicell  Animation Definition Information
 					Extension = ".namr";
 					break;
 				case "RGCN":    // Character Information
 					Extension = ".ncgr";
 					break;
-				case "RBCN":    // Character Information
+				case "RBCN":    // Bitmap Character Information
 					Extension = ".ncbr";
 					break;
 				case "RLCN":	// Color Palette Information
