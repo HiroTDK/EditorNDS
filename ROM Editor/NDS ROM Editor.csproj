@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomClasses.cs" />
+    <Compile Include="DocumentHandler.cs" />
     <Compile Include="FileHandlers\NDS File Table.cs" />
     <Compile Include="FileHandlers\NDS Header.cs" />
     <Compile Include="FileHandlers\NDS ROM.cs" />

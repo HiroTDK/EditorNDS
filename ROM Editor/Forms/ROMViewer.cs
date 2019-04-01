@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ROM_Editor.FileHandlers
+namespace EditorNDS.FileHandlers
 {
 	public partial class ROMViewer : UserControl
 	{

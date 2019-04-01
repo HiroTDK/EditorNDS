@@ -1,4 +1,4 @@
-﻿namespace ROM_Editor.FileHandlers
+﻿namespace EditorNDS.FileHandlers
 {
 	partial class ROMViewer
 	{

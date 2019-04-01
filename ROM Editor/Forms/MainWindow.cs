@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using EditorNDS.FileHandlers;
+using EditorNDS.TabbedInterface;
 
 namespace EditorNDS
 {
@@ -83,7 +84,7 @@ namespace EditorNDS
 					CustomMessageBox.Show("File Doesn't Exist", "Cannot find the specified file.");
 				}
 
-				NDSROM rom_file = new NDSROM(File.ReadAllBytes(openFileDialog.FileName));
+				new DocumentROM(TabManager.tabInterfaces.First());
 				
 
 

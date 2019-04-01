@@ -214,6 +214,11 @@ namespace EditorNDS.TabbedInterface
 				tabVisibility.Add(tab);
 				UpdateTabStrip();
 			}
+			if (tab.tabControl != null)
+			{
+				TabPanel.Controls.Clear();
+				TabPanel.Controls.Add(tab.tabControl);
+			}
 		}
 		public void CloseTab(Tab tab)
 		{
@@ -222,6 +227,15 @@ namespace EditorNDS.TabbedInterface
 			tabActivity.Remove(tab);
 			tabStrip.Controls.Remove(tab.tabLabel);
 			tab.tabLabel.Dispose();
+			if (tab.tabControl != null)
+			{
+				TabPanel.Controls.Remove(tab.tabControl);
+				tab.tabControl.Dispose();
+			}
+			if (tab.tabDocument != null)
+			{
+				tab.tabDocument.Dispose();
+			}
 
 			UpdateTabStrip();
 		}
@@ -241,6 +255,8 @@ namespace EditorNDS.TabbedInterface
 	{
 		public TabLabel tabLabel;
 		public TabInterface tabInterface;
+		public DocumentHandler tabDocument;
+		public Control tabControl;
 		public string tabTitle;
 
 		public bool mouseHover = false;

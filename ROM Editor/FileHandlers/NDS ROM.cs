@@ -8,7 +8,7 @@ using EditorROM.FileHandlers;
 
 namespace EditorNDS.FileHandlers
 {
-	class NDSROM
+	class NDSROM : BaseClass
 	{
 		public List<string> Errors;
 		public NDSHeader Header;
