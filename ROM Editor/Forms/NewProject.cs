@@ -316,6 +316,7 @@ namespace EditorNDS
 					string gameTitle = System.Text.Encoding.UTF8.GetString(rom, 0, 10);
 					string gameCode = System.Text.Encoding.UTF8.GetString(rom, 12, 4);
 
+					/*
 					if ( !Program.IsValidROM(gameTitle, gameCode) )
 					{
 						CustomMessageBox.Show(
@@ -336,6 +337,10 @@ namespace EditorNDS
 						title = gameTitle;
 						code = gameCode;
 					}
+					*/
+
+					title = gameTitle;
+					code = gameCode;
 				}
 
 				file = openFileDialog.FileName;

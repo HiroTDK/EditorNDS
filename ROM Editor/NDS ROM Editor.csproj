@@ -140,6 +140,7 @@
     <EmbeddedResource Include="TabbedInterface\TabInterface.resx">
       <DependentUpon>TabInterface.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -9,61 +9,54 @@ namespace EditorROM.FileHandlers
 {
 	public struct NDSHeader
 	{
-		public NDSHeader(byte[] temp)
+		public NDSHeader(Stream stream)
 		{
-			Header = new byte[16384];
-			Array.Clear(Header, 0, 16384);
-			temp.CopyTo(Header, 0);
+			BinaryReader reader = new BinaryReader(stream);
 
-			using (BinaryReader reader = new BinaryReader(new MemoryStream(Header)))
-			{
-				GameTitle = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(10));
-				reader.BaseStream.Position = 12;
-				GameCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(4));
-				MakerCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(2));
-				UnitCode = reader.ReadByte();
-				DeviceType = reader.ReadByte();
-				DeviceCapaciy = reader.ReadByte();
-				reader.BaseStream.Position = 29;
-				RegionCode = reader.ReadByte();
-				Version = reader.ReadByte();
-				InternalFlags = reader.ReadByte();
-				ARM9Offset = reader.ReadUInt32();
-				ARM9Entry = reader.ReadUInt32();
-				ARM9Load = reader.ReadUInt32();
-				ARM9Length = reader.ReadUInt32();
-				ARM7Offset = reader.ReadUInt32();
-				ARM7Entry = reader.ReadUInt32();
-				ARM7Load = reader.ReadUInt32();
-				ARM7Length = reader.ReadUInt32();
-				FNTOffset = reader.ReadUInt32();
-				FNTLength = reader.ReadUInt32();
-				FATOffset = reader.ReadUInt32();
-				FATLength = reader.ReadUInt32();
-				ARM9OverlayOffset = reader.ReadUInt32();
-				ARM9OverlayLength = reader.ReadUInt32();
-				ARM7OverlayOffset = reader.ReadUInt32();
-				ARM7OverlayLength = reader.ReadUInt32();
-				PortNormal = reader.ReadUInt32();
-				PortKEY1 = reader.ReadUInt32();
-				BannerOffset = reader.ReadUInt32();
-				SecureCRC = reader.ReadUInt16();
-				SecureTimeout = reader.ReadUInt16();
-				ARM9AutoLoad = reader.ReadUInt32();
-				ARM7AutoLoad = reader.ReadUInt32();
-				SecureDisable = reader.ReadUInt64();
-				TotalSize = reader.ReadUInt32();
-				HeaderSize = reader.ReadUInt32();
-				ARM9AutoParam = reader.ReadUInt32();
-				ARM7AutoParam = reader.ReadUInt32();
-				reader.BaseStream.Position = 348;
-				NintendoLogoCRC = reader.ReadUInt16();
-				HeaderCRC = reader.ReadUInt16();
-			}
+			GameTitle = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(10));
+			reader.BaseStream.Position = 12;
+			GameCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(4));
+			MakerCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(2));
+			UnitCode = reader.ReadByte();
+			DeviceType = reader.ReadByte();
+			DeviceCapaciy = reader.ReadByte();
+			reader.BaseStream.Position = 29;
+			RegionCode = reader.ReadByte();
+			Version = reader.ReadByte();
+			InternalFlags = reader.ReadByte();
+			ARM9Offset = reader.ReadUInt32();
+			ARM9Entry = reader.ReadUInt32();
+			ARM9Load = reader.ReadUInt32();
+			ARM9Length = reader.ReadUInt32();
+			ARM7Offset = reader.ReadUInt32();
+			ARM7Entry = reader.ReadUInt32();
+			ARM7Load = reader.ReadUInt32();
+			ARM7Length = reader.ReadUInt32();
+			FNTOffset = reader.ReadUInt32();
+			FNTLength = reader.ReadUInt32();
+			FATOffset = reader.ReadUInt32();
+			FATLength = reader.ReadUInt32();
+			ARM9OverlayOffset = reader.ReadUInt32();
+			ARM9OverlayLength = reader.ReadUInt32();
+			ARM7OverlayOffset = reader.ReadUInt32();
+			ARM7OverlayLength = reader.ReadUInt32();
+			PortNormal = reader.ReadUInt32();
+			PortKEY1 = reader.ReadUInt32();
+			BannerOffset = reader.ReadUInt32();
+			SecureCRC = reader.ReadUInt16();
+			SecureTimeout = reader.ReadUInt16();
+			ARM9AutoLoad = reader.ReadUInt32();
+			ARM7AutoLoad = reader.ReadUInt32();
+			SecureDisable = reader.ReadUInt64();
+			TotalSize = reader.ReadUInt32();
+			HeaderSize = reader.ReadUInt32();
+			ARM9AutoParam = reader.ReadUInt32();
+			ARM7AutoParam = reader.ReadUInt32();
+			reader.BaseStream.Position = 348;
+			NintendoLogoCRC = reader.ReadUInt16();
+			HeaderCRC = reader.ReadUInt16();
 		}
-
-		public byte[] Header;
-
+		
 		// Begin Header
 		public string GameTitle;                // 0x00		12 Characters; ASCII Codes 0x20-0x5F; 0x20 For Spaces; 0x00 For Padding
 		public string GameCode;                 // 0x0C		Game-Specific 4-Digit Code

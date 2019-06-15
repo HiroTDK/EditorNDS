@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace EditorNDS
 {
@@ -17,26 +18,6 @@ namespace EditorNDS
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainWindow());
-		}
-
-
-		public static bool IsValidROM(string title, string code)
-		{
-			List<string> validNames = new List<string>() { "POKEMON HG", "POKEMON SS" };
-			List<string> validCodes = new List<string>()
-			{
-				"IPKD", "IPKE", "IPKF", "IPKI", "IPKJ", "IPKK", "IPKS",
-				"IPGD", "IPGE", "IPGF", "IPGI", "IPGJ", "IPGK", "IPGS"
-			};
-
-			if (validNames.Contains(title) && validCodes.Contains(code))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
 		}
 	}
 }

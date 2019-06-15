@@ -65,30 +65,39 @@ namespace EditorNDS
 
 		private void openROMToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			using (OpenFileDialog openFileDialog = new OpenFileDialog())
+			MemoryStream memoryStream = new MemoryStream();
+
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Title = "Select a ROM to edit.";
+			openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			openFileDialog.RestoreDirectory = true;
+			openFileDialog.Filter = "NDS ROM (*.nds)|*.nds";
+			DialogResult result = openFileDialog.ShowDialog();
+
+			// Testing the open file dialog result.
+			if (result != DialogResult.OK)
 			{
-				openFileDialog.Title = "Select a ROM to edit.";
-				openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-				openFileDialog.RestoreDirectory = true;
-				openFileDialog.Filter = "NDS ROM (*.nds)|*.nds";
-				DialogResult result = openFileDialog.ShowDialog();
-
-				// Testing the open file dialog result.
-				if (result != DialogResult.OK)
-				{
-					// Presumption of cancellation.
-					return;
-				}
-				if (!openFileDialog.CheckFileExists)
-				{
-					CustomMessageBox.Show("File Doesn't Exist", "Cannot find the specified file.");
-				}
-
-				new DocumentROM(TabManager.tabInterfaces.First());
-				
-
-
+				// Presumption of cancellation.
+				return;
 			}
+			if (!openFileDialog.CheckFileExists)
+			{
+				CustomMessageBox.Show("File Doesn't Exist", "Cannot find the specified file.");
+			}
+
+			FileStream fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
+			fileStream.CopyTo(memoryStream);
+			fileStream.Close();
+			fileStream.Dispose();
+			openFileDialog.Dispose();
+
+			NDSROM rom = new NDSROM(memoryStream);
+			new DocumentROM(TabManager.tabInterfaces.First());
+
+			rom.Dispose();
+			memoryStream.Close();
+			memoryStream.Dispose();
+			GC.Collect();
 		}
 	}
 }
