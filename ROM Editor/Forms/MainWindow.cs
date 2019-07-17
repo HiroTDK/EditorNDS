@@ -43,12 +43,12 @@ namespace EditorNDS
 
 		private void newPMenuItem_Click(object sender, EventArgs e)
 		{
-			DialogResult result = CustomFormBox.Show(
+		/*	DialogResult result = CustomFormBox.Show(
 				new NewProject(),
 				"NewProject",
 				new List<string>(),
 				new List<DialogResult>());
-
+				*/
 			return;
 		}
 
@@ -92,12 +92,7 @@ namespace EditorNDS
 			openFileDialog.Dispose();
 
 			NDSROM rom = new NDSROM(memoryStream);
-			new DocumentROM(TabManager.tabInterfaces.First());
-
-			rom.Dispose();
-			memoryStream.Close();
-			memoryStream.Dispose();
-			GC.Collect();
+			new DocumentROM(TabManager.tabInterfaces.First(), rom);
 		}
 	}
 }

@@ -28,37 +28,64 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.treeView1 = new System.Windows.Forms.TreeView();
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ROMViewer));
+			this.romTree = new System.Windows.Forms.TreeView();
+			this.imageList = new System.Windows.Forms.ImageList(this.components);
 			this.SuspendLayout();
 			// 
-			// treeView1
+			// romTree
 			// 
-			this.treeView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(95)))), ((int)(((byte)(95)))));
-			this.treeView1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.treeView1.Location = new System.Drawing.Point(200, 0);
-			this.treeView1.Margin = new System.Windows.Forms.Padding(0);
-			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(200, 400);
-			this.treeView1.TabIndex = 0;
-			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+			this.romTree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(196)))), ((int)(((byte)(196)))));
+			this.romTree.Dock = System.Windows.Forms.DockStyle.Left;
+			this.romTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.romTree.FullRowSelect = true;
+			this.romTree.ImageIndex = 0;
+			this.romTree.ImageList = this.imageList;
+			this.romTree.Indent = 10;
+			this.romTree.ItemHeight = 18;
+			this.romTree.Location = new System.Drawing.Point(0, 0);
+			this.romTree.Margin = new System.Windows.Forms.Padding(0);
+			this.romTree.Name = "romTree";
+			this.romTree.SelectedImageIndex = 0;
+			this.romTree.Size = new System.Drawing.Size(200, 400);
+			this.romTree.TabIndex = 0;
+			this.romTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterExpand);
+			this.romTree.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterCollapse);
 			// 
-			// UserControl1
+			// imageList
+			// 
+			this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+			this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageList.Images.SetKeyName(0, "FileDirectoryBlack.png");
+			this.imageList.Images.SetKeyName(1, "FileSubmoduleBlack.png");
+			this.imageList.Images.SetKeyName(2, "FileSymlinkDirectoryBlack.png");
+			this.imageList.Images.SetKeyName(3, "ArchiveBlack.png");
+			this.imageList.Images.SetKeyName(4, "FileBlack.png");
+			this.imageList.Images.SetKeyName(5, "FileBinaryBlack.png");
+			this.imageList.Images.SetKeyName(6, "FileCodeBlack.png");
+			this.imageList.Images.SetKeyName(7, "FileMediaBlack.png");
+			this.imageList.Images.SetKeyName(8, "FilePdfBlack.png");
+			this.imageList.Images.SetKeyName(9, "FileSymlinkFileBlack.png");
+			this.imageList.Images.SetKeyName(10, "FileZipBlack.png");
+			// 
+			// ROMViewer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-			this.Controls.Add(this.treeView1);
+			this.Controls.Add(this.romTree);
 			this.Margin = new System.Windows.Forms.Padding(0);
-			this.Name = "UserControl1";
+			this.Name = "ROMViewer";
 			this.Size = new System.Drawing.Size(400, 400);
-			this.Load += new System.EventHandler(this.UserControl1_Load);
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.TreeView treeView1;
+		private System.Windows.Forms.TreeView romTree;
+		private System.Windows.Forms.ImageList imageList;
 	}
 }

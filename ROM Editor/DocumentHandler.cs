@@ -34,10 +34,15 @@ namespace EditorNDS
 
 	public class DocumentROM : DocumentHandler
 	{
-		public DocumentROM(TabInterface tabInterface)
+		public DocumentROM(TabInterface tabInterface, NDSROM rom)
 		{
-			documentTab = new Tab(tabInterface, "lololol");
-			documentTab.tabControl = new ROMViewer();
+			System.Console.WriteLine("Got this far.");
+			ROMViewer viewer = new ROMViewer(rom);
+			viewer.Dock = DockStyle.Fill;
+			string rom_title = "[" + rom.GameCode + "] " + rom.GameTitle;
+
+			documentTab = new Tab(tabInterface, rom_title);
+			documentTab.tabControl = viewer;
 			documentTab.tabDocument = this;
 			tabInterface.OpenTab(documentTab);
 			tabInterface.ActivateTab(documentTab);
