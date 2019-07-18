@@ -65,7 +65,31 @@ namespace EditorNDS.FileHandlers
 
 		private TreeNode InitializeNode(NDSFile file)
 		{
-			FileNode node = new FileNode(file);
+			TreeNode node = new TreeNode();
+
+			if (file.Extension == ".narc")
+			{
+
+				node = new TreeNode();
+				node.Name = file.Name;
+				node.Text = file.Name + file.Extension;
+				//node.Tag = file.ID;
+
+				NARC narc = file.NARCTables;
+				foreach (NDSDirectory child in narc.DirectoryTable[0].Children)
+				{
+					node.Nodes.Add(InitializeNode(child));
+				}
+				foreach (NDSFile sub_file in narc.DirectoryTable[0].Contents)
+				{
+					node.Nodes.Add(InitializeNode(sub_file));
+				}
+			}
+			else
+			{
+				node = new FileNode(file);
+			}
+			
 
 			return node;
 		}

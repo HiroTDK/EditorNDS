@@ -8,165 +8,242 @@ using System.Threading.Tasks;
 
 namespace EditorNDS.FileHandlers
 {
-	public class NARC : EditorNDS.BaseClass
+	/*----------------------------- NARC File Format ----------------------------------*\
+
+	//--- Header ---\\
+	const uint Signature = 1129464142;		// 0x0		File Signature (N,A,R,C)
+	const ushort ByteOrder = 65534;			// 0x4		Byte Order Marks (0xFEFF)
+	const ushort Version = 256;				// 0x6		Archive Format Version (0x0100)
+	uint FileSize = 0;						// 0x8		Archive File Size
+	const ushort HeaderSize = 16;			// 0xC		Archive Header Size (0x10)
+	const ushort DataBlocks = 3;			// 0xE		Number Of Data Blocks (0x3)
+
+	//--- FATB Data Block ---\\				// ?		[HeaderSize]
+	const uint SignatureFAT = 1178686530;	// 0x0		Data Block Type (FATB)
+	uint SizeFAT = 0;						// 0x4		Allocation Table Size
+	ushort FilesFAT = 0;					// 0x8		Number Of Files In Allocation Table
+	Reserved [FAT]							// 0xA		Reserved (0x0000)
+	byte[] FATB								// 0xC		File Allocation Table
+
+	//--- FNTB Data Block ---\\				// ?		[HeaderSize + SizeFAT]
+	const uint SignatureFNT = 1179538498;	// 0x0		Data Block Type (FNTB)
+	uint SizeFNT = 0;						// 0x4		Name Table Size
+	byte[] FNTB;							// 0x8		File Name Table
+	// Padding (Optional)					// ?		[Optional Boundary Alignment]
+
+	//--- FIMG Data Block ---\\				// ?		[HeaderSize + SizeFAT + SizeFNT + Padding]
+	const uint SignatureIMG = 1179209031;	// 0x0		Data Block Type (FIMG)
+	uint SizeIMG = 0;						// 0x4		Image File Size
+	byte[] FIMG;							// 0x8		Image File
+	// Padding (Required)					// ?		[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
+
+	\*---------------------------------------------------------------------------------*/
+
+	public struct NARC
 	{
-		public NARC(Stream stream, NDSFile narc)
+		public NARC(NDSFile[] file_table, NDSDirectory[] directory_table, bool is_valid)
 		{
-			stream.Position = narc.Offset;
-			byte[] bytes = new byte[narc.Length];
-			stream.Read(bytes, 0, narc.Length);
-
-			try
-			{
-				if ( BitConverter.ToUInt32(bytes, 0) != Signature
-					|| BitConverter.ToUInt16(bytes, 4) != ByteOrder
-					|| BitConverter.ToUInt16(bytes, 6) != Version
-					|| BitConverter.ToUInt32(bytes, 8) != bytes.Count()
-					|| BitConverter.ToUInt16(bytes, 12) != HeaderSize
-					|| BitConverter.ToUInt16(bytes, 14) != DataBlocks )
-				{
-					Console.WriteLine(narc.Path + narc.Name + narc.Extension + " has a malformed header.");
-				}
-
-				SizeFAT = BitConverter.ToUInt32(bytes, HeaderSize + 4);
-				FilesFAT = BitConverter.ToUInt16(bytes, HeaderSize + 8);
-
-				if ( BitConverter.ToUInt32(bytes, 16) != SignatureFAT
-					|| SizeFAT != ( FilesFAT * 8 ) + 12 )
-				{
-					Console.WriteLine(narc.Path + narc.Name + narc.Extension + " has a malformed file allocation table data block.");
-				}
-
-				SizeFNT = BitConverter.ToUInt32(bytes, HeaderSize + Convert.ToInt32(SizeFAT) + 4);
-
-				if ( BitConverter.ToUInt32(bytes, HeaderSize + Convert.ToInt32(SizeFAT)) != SignatureFNT )
-				{
-					Console.WriteLine(narc.Path + narc.Name + narc.Extension + " has a malformed file name table data block.");
-				}
-
-				SizeIMG = BitConverter.ToUInt32(bytes, HeaderSize + Convert.ToInt32(SizeFAT + SizeFNT) + 4);
-
-				if ( BitConverter.ToInt32(bytes, HeaderSize + Convert.ToInt32(SizeFAT + SizeFNT)) != SignatureIMG )
-				{
-					Console.WriteLine(narc.Path + narc.Name + narc.Extension + " has a malformed file image data block.");
-				}
-			}
-			catch
-			{
-				Console.WriteLine(narc.Path + narc.Name + narc.Extension + " is not a valid NARC file.");
-				isValid = false;
-				return;
-			}
-
-			byte[] fatArray = new byte[SizeFAT - 12];
-			byte[] fntArray = new byte[SizeFNT - 8];
-
-			Array.Copy(bytes, HeaderSize + 12, fatArray, 0, SizeFAT - 12);
-			Array.Copy(bytes, HeaderSize + Convert.ToInt32(SizeFAT) + 8, fntArray, 0, SizeFNT - 8);
-
-			int directoryCount = BitConverter.ToUInt16(fntArray, 6);
-			string[] directories = new string[directoryCount];
-			directories[0] = narc.Path + "\\" + narc.Name + ".narc";
-
-			NDSFile[] files = new NDSFile[FilesFAT];
-
-			for ( int i = 0; i < FilesFAT; i++ )
-			{
-				NDSFile file = new NDSFile();
-				NDSFile currentFile = file;
-				file.Name = "File "+ i.ToString("D" + FilesFAT.ToString().Length);
-				file.Path = directories[0];
-				file.Offset = Convert.ToInt32(BitConverter.ToUInt32(fatArray, i * 8));
-				file.Length = Convert.ToInt32(BitConverter.ToUInt32(fatArray, i * 8 + 4)) - file.Offset;
-				file.Offset += narc.Offset + Convert.ToInt32(HeaderSize + SizeFAT + SizeFNT) + 8;
-				files[i] = file;
-			}
-
-			int unnamedCount = 0;
-			for ( int i = 0; i < directoryCount; i++ )
-			{
-				int entryPos = Convert.ToInt32(BitConverter.ToUInt32(fntArray, i * 8));
-				int fileIndex = Convert.ToInt32(BitConverter.ToUInt16(fntArray, ( i * 8 ) + 4));
-
-				while ( true )
-				{
-					byte entryByte = fntArray[entryPos++];
-
-					if ( entryByte == 0 )
-					{
-						break;
-					}
-
-					else if ( entryByte == 128 )
-					{
-						int index = BitConverter.ToUInt16(fntArray, entryPos) - 61440;
-						directories[index] = directories[i] + "\\Unnamed " + unnamedCount++;
-						entryPos += 2;
-					}
-
-					else if ( entryByte > 128 )
-					{
-						int index = BitConverter.ToUInt16(fntArray, ( entryPos ) + ( entryByte - 128 )) - 61440;
-						directories[index] = directories[i] + "\\" + System.Text.Encoding.UTF8.GetString(fntArray, entryPos, entryByte - 128);
-						entryPos += ( entryByte - 128 ) + 2;
-					}
-
-					else
-					{
-						files[fileIndex].Name = System.Text.Encoding.UTF8.GetString(fntArray, entryPos, entryByte);
-						files[fileIndex].Path = narc.Path + directories[i];
-						fileIndex++;
-						entryPos += entryByte;
-					}
-				}
-			}
-
-			dirList = directories.ToList();
-			fileList = files.ToList();
-			foreach (NDSFile file in fileList )
-			{
-				file.GetExtension(stream);
-			}
-
-			bytes = null;
-			fatArray = null;
-			fntArray = null;
-			directories = null;
-			files = null;
+			IsValid = is_valid;
+			FileTable = file_table;
+			DirectoryTable = directory_table;
 		}
-		
 
-		// Validity Flag
-		public bool isValid = true;
-		public List<string> dirList;
-		public List<NDSFile> fileList;
+		public bool IsValid;
+		public NDSFile[] FileTable;
+		public NDSDirectory[] DirectoryTable;
+	}
 
+	public static class FileHandler
+	{
+		public static NARC NARC(Stream stream, NDSFile narc)
+		{
+			NDSFile[] file_table;
+			NDSDirectory[] directory_table;
+			System.Console.Write("Reading NARC");
 
-		// Header Data
-		const uint Signature = 1129464142;		// 0x0		File Signature (N,A,R,C)
-		const ushort ByteOrder = 65534;			// 0x4		Byte Order Marks (0xFEFF)
-		const ushort Version = 256;             // 0x6		Archive Format Version (0x0100)
-		//uint FileSize = 0;					// 0x8		Archive File Size
-		const ushort HeaderSize = 16;			// 0xC		Archive Header Size (0x10)
-		const ushort DataBlocks = 3;			// 0xE		Number Of Data Blocks (0x3)
+			using (BinaryReader reader = new BinaryReader(stream, new UTF8Encoding(), true))
+			{
+				reader.BaseStream.Position = narc.Offset;
 
-		// FATB Data Block						// ?		[HeaderSize]
-		const uint SignatureFAT = 1178686530;	// 0x0		Data Block Type (FATB)
-		uint SizeFAT = 0;                       // 0x4		Allocation Table Size
-		ushort FilesFAT = 0;                    // 0x8		Number Of Files In Allocation Table
-		// Reserved [FAT]						// 0xA		Reserved (0x0000)
-		// FATB									// 0xC		File Allocation Table
+				// Here we read the header of the file. These are constants,
+				// so if any of this is wrong, it's probably a malformed NARC
+				// or not a NARC at all.
+				if (reader.ReadUInt32() != 1129464142
+					|| reader.ReadUInt16() != 65534
+					|| reader.ReadUInt16() != 256
+					|| reader.ReadUInt32() != narc.Length
+					|| reader.ReadUInt16() != 16
+					|| reader.ReadUInt16() != 3)
+				{
+					System.Console.Write(" ... FUCK THE HEADER!\n");
+					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+				}
 
-		// FNTB Data Block						// ?		[HeaderSize + SizeFAT]
-		const uint SignatureFNT = 1179538498;	// 0x0		Data Block Type (FNTB)
-		uint SizeFNT = 0;                       // 0x4		Name Table Size
-		// FNTB;								// 0x8		File Name Table
-		// Padding (Optional)					// ?		[Optional Boundary Alignment]
+				// FAT Signature Check
+				if (reader.ReadUInt32() != 1178686530)
+				{
+					System.Console.Write(" ... FUCK THE FAT!\n");
+					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+				}
 
-		// FIMG Data Block						// ?		[HeaderSize + SizeFAT + SizeFNT + Padding]
-		const uint SignatureIMG = 1179209031;	// 0x0		Data Block Type (FIMG)
-		uint SizeIMG = 0;                       // 0x4		Image File Size
-		//byte[] FIMG;                          // 0x8		Image File
-		// Padding (Required)					// ?		[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
+				uint fat_length = reader.ReadUInt32();
+				int file_count = reader.ReadUInt16();
+				reader.BaseStream.Position += 2;
+
+				// Another validity check ...
+				if (fat_length != (file_count * 8) + 12)
+				{
+					System.Console.Write(" ... FUCK THE FAT!?\n");
+					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+				}
+
+				// The File Allocation Table contain eight bytes per file entry;
+				// a four byte file offset followed by a four byte file length.
+				// We start by determining the file count and then dividing the
+				// offsets and lenghts into separate indexed arrays.
+				file_table = new NDSFile[file_count];
+				for (int i = 0; i < file_count; i++)
+				{
+					file_table[i] = new NDSFile();
+					file_table[i].Name = "File " + i.ToString("D" + file_count.ToString().Length);
+					file_table[i].ID = i;
+					file_table[i].Offset = reader.ReadUInt32();
+					file_table[i].Length = reader.ReadUInt32() - file_table[i].Offset;
+				}
+
+				// FNT Signature check
+				if (reader.ReadUInt32() != 1179538498)
+				{
+					System.Console.Write(" ... FUCK THE FNT!\n");
+					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+				}
+				uint fnt_length = reader.ReadUInt32();
+				uint fnt_offset = narc.Offset + 16 + fat_length + 8;
+
+				// The File Name Table contains two sections; the first is the
+				// main directory table. It's length is eight bytes per entry.
+				// The first four bytes represent an offset to the entry in the
+				// second section; the sub-directory table. This is followed by
+				// two byte index corresponding to the first file entry in the
+				// directory. Finally we have a two byte index corresponding to
+				// the parent directory.
+
+				// The first entry in the table is slightly different though.
+				// The last two bytes in the first entry actually denote the
+				// number of directories in the first section. Let's read that,
+				// then use it to iterate through the main directory table and
+				// split the table into three seperate indexed arrays.
+				reader.BaseStream.Position = fnt_offset + 6;
+				int directory_count = reader.ReadUInt16();
+				reader.BaseStream.Position = fnt_offset;
+
+				directory_table = new NDSDirectory[directory_count];
+				int[] entry_offset = new int[directory_count];
+				int[] first_file = new int[directory_count];
+				int[] parent_index = new int[directory_count];
+
+				reader.BaseStream.Position = fnt_offset;
+				for (int i = 0; i < directory_count; i++)
+				{
+					entry_offset[i] = Convert.ToInt32(reader.ReadUInt32() + fnt_offset);
+					first_file[i] = reader.ReadUInt16();
+					parent_index[i] = reader.ReadUInt16() - 61440;
+				}
+
+				// Setting up the root directory.
+				directory_table[0] = new NDSDirectory();
+				directory_table[0].Name = "Root";
+				directory_table[0].Path = "Root";
+
+				// The second section is the sub-directory table. This table is
+				// a bit more complex. We start by iterating through the main
+				// directory table and using the entry offset to locate its
+				// position in the sub-directory table.
+				int file_index = first_file[0];
+
+				for (int i = 0; i < directory_count; i++)
+				{
+					// Initialize the directory arrays.
+					reader.BaseStream.Position = entry_offset[i];
+					NDSDirectory parent_directory = directory_table[i];
+					parent_directory.Children = new List<NDSDirectory>();
+					parent_directory.Contents = new List<NDSFile>();
+
+					while (true)
+					{
+						// A small sanity check to make sure we havent overrun the table.
+						if (reader.BaseStream.Position > fnt_offset + fnt_length)
+						{
+							break;
+						}
+
+						// The first byte in the sub-directory entry indicates how to continue.
+						byte entry_byte = reader.ReadByte();
+
+						// 0 indicates the end of a directory.
+						if (entry_byte == 0)
+						{
+							break;
+						}
+
+						// 128 is actually invalid, and shouldn't be encountered. It would
+						// indicate a directory with no name, which isn't actually valid.
+						else if (entry_byte == 128)
+						{
+							continue;
+						}
+
+						// The first bit indicates a directory entry, so anything over 128
+						// is a sub-directory. The other seven bits indicate the length of
+						// the sub-directory name. We simply need to subtract 128, and the
+						// next so many bytes are the sub-directory name. The following
+						// two bytes are the sub-directory's ID in the main directory table.
+						else if (entry_byte > 128)
+						{
+							string name = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(entry_byte - 128));
+							NDSDirectory child_directory = new NDSDirectory();
+							child_directory.Name = name;
+							child_directory.Parent = parent_directory;
+							child_directory.Path = parent_directory.Path + "\\" + child_directory.Name;
+							child_directory.ID = reader.ReadUInt16() - 61440;
+
+							directory_table[child_directory.ID] = child_directory;
+							parent_directory.Children.Add(child_directory);
+						}
+
+						// Anything under 128 indicates a file. Same as the previous, the
+						// other seven bits indicate the length of the file name. Unlike
+						// sub-directories, there is no index proceeding the file name.
+						else
+						{
+							string name = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(entry_byte));
+							NDSFile file = file_table[file_index++];
+							file.Name = name;
+							file.Parent = parent_directory;
+							file.Path = parent_directory.Path + "\\" + file.Name;
+
+							parent_directory.Contents.Add(file);
+						}
+					}
+				}
+
+				// We run this now so that we don't mess up the memory stream.
+				foreach (NDSFile file in file_table)
+				{
+					if ( file.Parent == null)
+					{
+						file.Parent = directory_table[0];
+						file.Path = file.Parent.Path + "\\" + file.Name;
+						file.Parent.Contents.Add(file);
+					}
+					file.Offset += narc.Offset + 16 + fat_length + fnt_length + 8;
+					file.Length += narc.Offset + 16 + fat_length + fnt_length + 8;
+					file.GetExtension(stream);
+				}
+			}
+
+			return new NARC(file_table, directory_table, true);
+		}
 	}
 }
+ 

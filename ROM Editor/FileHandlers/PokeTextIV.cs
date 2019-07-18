@@ -13,7 +13,7 @@ namespace EditorNDS.FileHandlers
 		{
 			stream.Position = file.Offset;
 			Data = new byte[file.Length];
-			stream.Read(Data, 0, file.Length);
+			stream.Read(Data, 0, Convert.ToInt32(file.Length));
 
 			Decrypt();
 		}

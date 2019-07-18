@@ -55,7 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compressors\Class1.cs" />
     <Compile Include="CustomClasses.cs" />
     <Compile Include="DocumentHandler.cs" />
     <Compile Include="FileHandlers\NDS Header.cs" />
@@ -146,7 +145,6 @@
     <None Include="Images\Arrow.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Compressors\New Text Document.txt" />
     <None Include="Images\ZapBlack.png" />
     <None Include="Images\XBlack.png" />
     <None Include="Images\WatchBlack.png" />
@@ -1484,6 +1482,9 @@
     <None Include="Icons\archive.ico" />
     <None Include="Icons\alert_white.ico" />
     <None Include="Icons\alert.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Compressors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

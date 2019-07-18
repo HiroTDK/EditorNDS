@@ -335,8 +335,8 @@ namespace EditorNDS.FileHandlers
 				{
 					FileTable[i] = new NDSFile();
 					FileTable[i].ID = i;
-					FileTable[i].Offset = Convert.ToInt32(reader.ReadUInt32());
-					FileTable[i].Length = Convert.ToInt32(reader.ReadUInt32() - FileTable[i].Offset);
+					FileTable[i].Offset = reader.ReadUInt32();
+					FileTable[i].Length = reader.ReadUInt32() - FileTable[i].Offset;
 				}
 
 				// The File Name Table contains two sections; the first is the
@@ -450,6 +450,11 @@ namespace EditorNDS.FileHandlers
 				foreach (NDSFile file in FileTable)
 				{
 					file.GetExtension(stream);
+
+					if ( file.Extension == ".narc" )
+					{
+						file.NARCTables = FileHandler.NARC(stream, file);
+					}
 				}
 			}
 

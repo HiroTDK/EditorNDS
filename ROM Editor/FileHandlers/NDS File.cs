@@ -16,8 +16,10 @@ namespace EditorNDS.FileHandlers
 	{
 		public NDSFile()
 		{
+
 		}
-		public NDSFile(string name, string path, string extension, int offset, int length, NDSDirectory parent)
+
+		public NDSFile(string name, string path, string extension, uint offset, uint length, NDSDirectory parent)
 		{
 			Name = name;
 			Path = path;
@@ -27,7 +29,7 @@ namespace EditorNDS.FileHandlers
 			Parent = parent;
 		}
 
-		public NDSFile(int offset, int length)
+		public NDSFile(uint offset, uint length)
 		{
 			Offset = offset;
 			Length = length;
@@ -37,9 +39,10 @@ namespace EditorNDS.FileHandlers
 		public string Path;
 		public string Extension;
 		public int ID;
-		public int Offset;
-		public int Length;
+		public uint Offset;
+		public uint Length;
 		public NDSDirectory Parent;
+		public NARC NARCTables;
 
 		public void GetExtension(Stream stream)
 		{
@@ -128,7 +131,7 @@ namespace EditorNDS.FileHandlers
 					break;
 			}
 
-			if ( Extension == "" )
+			if ( Extension == "" && Length > 7)
 			{
 				// Test for text files by searching for the "EOF" string near the end of the file.
 				byte[] EOF = new byte[7];
