@@ -59,7 +59,6 @@ namespace EditorNDS.FileHandlers
 		{
 			NDSFile[] file_table;
 			NDSDirectory[] directory_table;
-			System.Console.Write("Reading NARC");
 
 			using (BinaryReader reader = new BinaryReader(stream, new UTF8Encoding(), true))
 			{
@@ -137,7 +136,13 @@ namespace EditorNDS.FileHandlers
 				int directory_count = reader.ReadUInt16();
 				reader.BaseStream.Position = fnt_offset;
 
+
+				// Setting up the root directory.
 				directory_table = new NDSDirectory[directory_count];
+				directory_table[0] = new NDSDirectory();
+				directory_table[0].Name = "File Table";
+				directory_table[0].Path = narc.Path + "\\File Table";
+
 				int[] entry_offset = new int[directory_count];
 				int[] first_file = new int[directory_count];
 				int[] parent_index = new int[directory_count];
@@ -149,11 +154,6 @@ namespace EditorNDS.FileHandlers
 					first_file[i] = reader.ReadUInt16();
 					parent_index[i] = reader.ReadUInt16() - 61440;
 				}
-
-				// Setting up the root directory.
-				directory_table[0] = new NDSDirectory();
-				directory_table[0].Name = "Root";
-				directory_table[0].Path = "Root";
 
 				// The second section is the sub-directory table. This table is
 				// a bit more complex. We start by iterating through the main
@@ -227,7 +227,7 @@ namespace EditorNDS.FileHandlers
 					}
 				}
 
-				// We run this now so that we don't mess up the memory stream.
+				// We run this now so that we don't have to jump the memory stream a ton.
 				foreach (NDSFile file in file_table)
 				{
 					if ( file.Parent == null)
@@ -237,8 +237,12 @@ namespace EditorNDS.FileHandlers
 						file.Parent.Contents.Add(file);
 					}
 					file.Offset += narc.Offset + 16 + fat_length + fnt_length + 8;
-					file.Length += narc.Offset + 16 + fat_length + fnt_length + 8;
 					file.GetExtension(stream);
+
+					if( file.Extension == ".narc" )
+					{
+						file.NARCTables = FileHandler.NARC(stream, file);
+					}
 				}
 			}
 

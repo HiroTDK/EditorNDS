@@ -89,8 +89,24 @@ namespace EditorNDS.FileHandlers
 		public NDSFile ARM7;
 		public NDSFile[] FileTable;
 		public NDSDirectory[] DirectoryTable;
-		public List<NDSFile> OverlayTableARM9;
-		public List<NDSFile> OverlayTableARM7;
+		public NDSOverlay[] OverlayTable9;
+		public NDSOverlay[] OverlayTable7;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="stream"></param>
+		public NDSROM(string file_path)
+		{
+			MemoryStream memory_stream = new MemoryStream();
+			FileStream file_stream = new FileStream(file_path, FileMode.Open);
+			file_stream.CopyTo(memory_stream);
+			file_stream.Close();
+			file_stream.Dispose();
+			ReadROM(memory_stream);
+
+			WorkingFile = file_path;
+		}
 
 		/// <summary>
 		/// Reads the specified ROM file and breaks down all the pertinent information.
@@ -320,6 +336,13 @@ namespace EditorNDS.FileHandlers
 		/// 
 		public void ReadFileTables(Stream stream)
 		{
+			if ( FATOffset == 0 || FATLength == 0 ||
+				FNTOffset == 0 || FNTLength == 0 ||
+				ARM9OverlayOffset == 0 || ARM9OverlayLength == 0 )
+			{
+				return;
+			}
+
 			// We initiate a BinaryReader with using() and set it to leave the stream open after disposal.
 			using (BinaryReader reader = new BinaryReader(stream, new UTF8Encoding(), true))
 			{
@@ -371,8 +394,8 @@ namespace EditorNDS.FileHandlers
 
 				// Setting up the root directory.
 				DirectoryTable[0] = new NDSDirectory();
-				DirectoryTable[0].Name = "Root";
-				DirectoryTable[0].Path = "Root";
+				DirectoryTable[0].Name = "File Table";
+				DirectoryTable[0].Path = "File Table";
 
 				// The second section is the sub-directory table. This table is
 				// a bit more complex. We start by iterating through the main
@@ -456,13 +479,68 @@ namespace EditorNDS.FileHandlers
 						file.NARCTables = FileHandler.NARC(stream, file);
 					}
 				}
+
+
+				// ARM9 and ARM9 Overlay Table reading.
+				ARM9 = new NDSFile();
+				ARM9.Name = "ARM9";
+				ARM9.Extension = ".asm";
+				ARM9.Offset = ARM9Offset;
+				ARM9.Length = ARM9Length;
+
+				int overlay9_count = Convert.ToInt32(ARM9OverlayLength / 32);
+				reader.BaseStream.Position = ARM9OverlayOffset;
+				OverlayTable9 = new NDSOverlay[overlay9_count];
+
+				for (int i = 0; i < overlay9_count; i++)
+				{
+					NDSOverlay overlay = new NDSOverlay();
+					overlay.OverlayID = reader.ReadUInt32();
+					overlay.AddressRAM = reader.ReadUInt32();
+					overlay.SizeRAM = reader.ReadUInt32();
+					overlay.SizeBSS = reader.ReadUInt32();
+					overlay.StaticStartAddress = reader.ReadUInt32();
+					overlay.StaticEndAddress = reader.ReadUInt32();
+					overlay.File = FileTable[reader.ReadUInt32()];
+					reader.BaseStream.Position += 4;
+
+					overlay.File.Name = "Overlay " + overlay.OverlayID;
+					overlay.File.Path = "ARM9 Overlay Table\\" + overlay.File.Name;
+					overlay.File.Extension = ".asm";
+
+					OverlayTable9[i] = overlay;
+				}
+
+				// ARM7 and ARM7 Overlay Table reading.
+				if ( ARM7Length > 0 )
+				{
+					ARM7 = new NDSFile();
+					ARM7.Name = "ARM7";
+					ARM7.Extension = ".asm";
+					ARM7.Offset = ARM7Offset;
+					ARM7.Length = ARM7Length;
+				}
+
+				int overlay7_count = Convert.ToInt32(ARM7OverlayLength / 32);
+				OverlayTable7 = new NDSOverlay[overlay7_count];
+				if ( overlay7_count > 0 )
+				{
+					reader.BaseStream.Position = ARM7OverlayOffset;
+
+					for (int i = 0; i < overlay7_count; i++)
+					{
+						NDSOverlay overlay = new NDSOverlay();
+						overlay.OverlayID = reader.ReadUInt32();
+						overlay.AddressRAM = reader.ReadUInt32();
+						overlay.SizeRAM = reader.ReadUInt32();
+						overlay.SizeBSS = reader.ReadUInt32();
+						overlay.StaticStartAddress = reader.ReadUInt32();
+						overlay.StaticEndAddress = reader.ReadUInt32();
+						overlay.File = FileTable[reader.ReadUInt32()];
+						reader.BaseStream.Position += 4;
+					}
+				}
 			}
-
-		}
-
-		public NDSROM(Stream stream)
-		{
-			ReadROM(stream);
 		}
 	}
 }

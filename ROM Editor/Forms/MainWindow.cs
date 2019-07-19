@@ -65,7 +65,7 @@ namespace EditorNDS
 
 		private void openROMToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MemoryStream memoryStream = new MemoryStream();
+			string file_path = "";
 
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 			openFileDialog.Title = "Select a ROM to edit.";
@@ -84,14 +84,10 @@ namespace EditorNDS
 			{
 				CustomMessageBox.Show("File Doesn't Exist", "Cannot find the specified file.");
 			}
-
-			FileStream fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
-			fileStream.CopyTo(memoryStream);
-			fileStream.Close();
-			fileStream.Dispose();
+			file_path = openFileDialog.FileName;
 			openFileDialog.Dispose();
 
-			NDSROM rom = new NDSROM(memoryStream);
+			NDSROM rom = new NDSROM(file_path);
 			new DocumentROM(TabManager.tabInterfaces.First(), rom);
 		}
 	}

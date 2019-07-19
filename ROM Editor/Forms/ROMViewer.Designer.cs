@@ -48,10 +48,10 @@
 			this.romTree.Margin = new System.Windows.Forms.Padding(0);
 			this.romTree.Name = "romTree";
 			this.romTree.SelectedImageIndex = 0;
-			this.romTree.Size = new System.Drawing.Size(200, 400);
+			this.romTree.Size = new System.Drawing.Size(250, 480);
 			this.romTree.TabIndex = 0;
-			this.romTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterExpand);
 			this.romTree.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterCollapse);
+			this.romTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterExpand);
 			// 
 			// imageList
 			// 
@@ -60,14 +60,19 @@
 			this.imageList.Images.SetKeyName(0, "FileDirectoryBlack.png");
 			this.imageList.Images.SetKeyName(1, "FileSubmoduleBlack.png");
 			this.imageList.Images.SetKeyName(2, "FileSymlinkDirectoryBlack.png");
-			this.imageList.Images.SetKeyName(3, "ArchiveBlack.png");
-			this.imageList.Images.SetKeyName(4, "FileBlack.png");
-			this.imageList.Images.SetKeyName(5, "FileBinaryBlack.png");
-			this.imageList.Images.SetKeyName(6, "FileCodeBlack.png");
-			this.imageList.Images.SetKeyName(7, "FileMediaBlack.png");
-			this.imageList.Images.SetKeyName(8, "FilePdfBlack.png");
-			this.imageList.Images.SetKeyName(9, "FileSymlinkFileBlack.png");
-			this.imageList.Images.SetKeyName(10, "FileZipBlack.png");
+			this.imageList.Images.SetKeyName(3, "RepoBlack.png");
+			this.imageList.Images.SetKeyName(4, "RepoPullBlack.png");
+			this.imageList.Images.SetKeyName(5, "ListOrderedBlack.png");
+			this.imageList.Images.SetKeyName(6, "ListUnorderedBlack.png");
+			this.imageList.Images.SetKeyName(7, "FileBlack.png");
+			this.imageList.Images.SetKeyName(8, "FileZipBlack.png");
+			this.imageList.Images.SetKeyName(9, "FileBinaryBlack.png");
+			this.imageList.Images.SetKeyName(10, "FileCodeBlack.png");
+			this.imageList.Images.SetKeyName(11, "FileMediaBlack.png");
+			this.imageList.Images.SetKeyName(12, "PersonBlack.png");
+			this.imageList.Images.SetKeyName(13, "UnmuteBlack.png");
+			this.imageList.Images.SetKeyName(14, "ZapBlack.png");
+			this.imageList.Images.SetKeyName(15, "NoteBlack.png");
 			// 
 			// ROMViewer
 			// 
@@ -78,7 +83,7 @@
 			this.Controls.Add(this.romTree);
 			this.Margin = new System.Windows.Forms.Padding(0);
 			this.Name = "ROMViewer";
-			this.Size = new System.Drawing.Size(400, 400);
+			this.Size = new System.Drawing.Size(640, 480);
 			this.ResumeLayout(false);
 
 		}

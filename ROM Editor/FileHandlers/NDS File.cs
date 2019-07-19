@@ -35,12 +35,12 @@ namespace EditorNDS.FileHandlers
 			Length = length;
 		}
 
-		public string Name;
-		public string Path;
-		public string Extension;
-		public int ID;
-		public uint Offset;
-		public uint Length;
+		public string Name = "";
+		public string Path = "";
+		public string Extension = "";
+		public int ID = 0;
+		public uint Offset = 0;
+		public uint Length = 0;
 		public NDSDirectory Parent;
 		public NARC NARCTables;
 
@@ -49,8 +49,6 @@ namespace EditorNDS.FileHandlers
 			byte[] firstFour = new byte[4];
 			stream.Position = Offset;
 			stream.Read(firstFour, 0, 4);
-
-			Extension = "";
 
 			switch (System.Text.Encoding.UTF8.GetString(firstFour))
 			{
@@ -131,15 +129,19 @@ namespace EditorNDS.FileHandlers
 					break;
 			}
 
-			if ( Extension == "" && Length > 7)
+			if ( Extension == "" && Length > 8)
 			{
 				// Test for text files by searching for the "EOF" string near the end of the file.
-				byte[] EOF = new byte[7];
-				stream.Position = Offset + Length - 7;
-				stream.Read(EOF, 0, 7);
+				byte[] EOF = new byte[8];
+				stream.Position = Offset + Length - 8;
+				stream.Read(EOF, 0, 8);
 				if (System.Text.Encoding.UTF8.GetString(EOF).Contains("EOF"))
 				{
 					Extension = ".txt";
+				}
+				else if (Name.Contains("."))
+				{
+					Extension = Name.Remove(0, Name.LastIndexOf("."));
 				}
 			}
 
@@ -160,32 +162,20 @@ namespace EditorNDS.FileHandlers
 			   Overlays        
 	\*--------------------------*/
 
-	public struct NDSOverlay
+	public class NDSOverlay
 	{
-		public NDSOverlay(int offset, int length, int overlay_id, int address_ram, int size_ram, int size_bss, int static_start_address, int static_end_address, int file_id)
+		public NDSOverlay()
 		{
-			Offset = offset;
-			Length = length;
-			OverlayID = overlay_id;
-			AddressRAM = address_ram;
-			SizeRAM = size_ram;
-			SizeBSS = size_bss;
-			StaticStartAddress = static_start_address;
-			StaticEndAddress = static_end_address;
-			FileID = file_id;
+
 		}
 
-		public int Offset;
-		public int Length;
-
-		public int OverlayID;
-		public int AddressRAM;
-		public int SizeRAM;
-		public int SizeBSS;
-		public int StaticStartAddress;
-		public int StaticEndAddress;
-		public int FileID;
-
+		public uint OverlayID;
+		public uint AddressRAM;
+		public uint SizeRAM;
+		public uint SizeBSS;
+		public uint StaticStartAddress;
+		public uint StaticEndAddress;
+		public NDSFile File;
 	}
 
 	/*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯*\
