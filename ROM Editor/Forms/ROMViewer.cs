@@ -155,7 +155,6 @@ namespace EditorNDS.FileHandlers
 				node = new FileNode(file);
 			}
 			
-
 			return node;
 		}
 
@@ -184,8 +183,8 @@ namespace EditorNDS.FileHandlers
 						SelectedImageIndex = 9;
 						break;
 					case ".bin":
-						ImageIndex = 9;
-						SelectedImageIndex = 9;
+						ImageIndex = 10;
+						SelectedImageIndex = 10;
 						break;
 					case ".sdat":
 						ImageIndex = 13;

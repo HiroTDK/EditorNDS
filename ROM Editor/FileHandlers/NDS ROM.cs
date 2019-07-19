@@ -474,7 +474,7 @@ namespace EditorNDS.FileHandlers
 				{
 					file.GetExtension(stream);
 
-					if ( file.Extension == ".narc" )
+					if ( file.Extension == ".bin")
 					{
 						file.NARCTables = FileHandler.NARC(stream, file);
 					}
@@ -484,7 +484,7 @@ namespace EditorNDS.FileHandlers
 				// ARM9 and ARM9 Overlay Table reading.
 				ARM9 = new NDSFile();
 				ARM9.Name = "ARM9";
-				ARM9.Extension = ".asm";
+				ARM9.Extension = ".bin";
 				ARM9.Offset = ARM9Offset;
 				ARM9.Length = ARM9Length;
 
@@ -506,7 +506,7 @@ namespace EditorNDS.FileHandlers
 
 					overlay.File.Name = "Overlay " + overlay.OverlayID;
 					overlay.File.Path = "ARM9 Overlay Table\\" + overlay.File.Name;
-					overlay.File.Extension = ".asm";
+					overlay.File.Extension = ".bin";
 
 					OverlayTable9[i] = overlay;
 				}
@@ -516,7 +516,7 @@ namespace EditorNDS.FileHandlers
 				{
 					ARM7 = new NDSFile();
 					ARM7.Name = "ARM7";
-					ARM7.Extension = ".asm";
+					ARM7.Extension = ".bin";
 					ARM7.Offset = ARM7Offset;
 					ARM7.Length = ARM7Length;
 				}
