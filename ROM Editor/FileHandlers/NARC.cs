@@ -74,14 +74,12 @@ namespace EditorNDS.FileHandlers
 					|| reader.ReadUInt16() != 16
 					|| reader.ReadUInt16() != 3)
 				{
-					System.Console.Write(" ... FUCK THE HEADER!\n");
 					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
 				}
 
 				// FAT Signature Check
 				if (reader.ReadUInt32() != 1178686530)
 				{
-					System.Console.Write(" ... FUCK THE FAT!\n");
 					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
 				}
 
@@ -92,7 +90,6 @@ namespace EditorNDS.FileHandlers
 				// Another validity check ...
 				if (fat_length != (file_count * 8) + 12)
 				{
-					System.Console.Write(" ... FUCK THE FAT!?\n");
 					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
 				}
 
@@ -113,7 +110,6 @@ namespace EditorNDS.FileHandlers
 				// FNT Signature check
 				if (reader.ReadUInt32() != 1179538498)
 				{
-					System.Console.Write(" ... FUCK THE FNT!\n");
 					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
 				}
 				uint fnt_length = reader.ReadUInt32();

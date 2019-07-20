@@ -36,7 +36,6 @@ namespace EditorNDS
 	{
 		public DocumentROM(TabInterface tabInterface, NDSROM rom)
 		{
-			System.Console.WriteLine("Got this far.");
 			ROMViewer viewer = new ROMViewer(rom);
 			viewer.Dock = DockStyle.Fill;
 			string rom_title = "[" + rom.GameCode + "] " + rom.GameTitle;
