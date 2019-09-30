@@ -73,12 +73,6 @@
     <Compile Include="Forms\MessageBox.Designer.cs">
       <DependentUpon>MessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ROM Header.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ROM Header.Designer.cs">
-      <DependentUpon>ROM Header.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ROMViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -111,9 +105,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MessageBox.resx">
       <DependentUpon>MessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ROM Header.resx">
-      <DependentUpon>ROM Header.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ROMViewer.resx">
       <DependentUpon>ROMViewer.cs</DependentUpon>

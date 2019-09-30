@@ -55,7 +55,7 @@ namespace EditorNDS.FileHandlers
 
 	public static class FileHandler
 	{
-		public static NARC NARC(Stream stream, NDSFile narc)
+		public static NARC NARC(Stream stream, NDSFile narc, bool is_nitro)
 		{
 			NDSFile[] file_table;
 			NDSDirectory[] directory_table;
@@ -64,34 +64,55 @@ namespace EditorNDS.FileHandlers
 			{
 				reader.BaseStream.Position = narc.Offset;
 
-				// Here we read the header of the file. These are constants,
-				// so if any of this is wrong, it's probably a malformed NARC
-				// or not a NARC at all.
-				if (reader.ReadUInt32() != 1129464142
-					|| reader.ReadUInt16() != 65534
-					|| reader.ReadUInt16() != 256
-					|| reader.ReadUInt32() != narc.Length
-					|| reader.ReadUInt16() != 16
-					|| reader.ReadUInt16() != 3)
+				uint fnt_offset = 0;
+				uint fnt_length = 0;
+				uint fat_offset = 0;
+				uint fat_length = 0;
+				ushort file_count = 0;
+
+				if ( is_nitro )
 				{
-					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					// Here we read the header of the file. These are constants,
+					// so if any of this is wrong, it's probably a malformed NARC
+					// or not a NARC at all.
+					if (reader.ReadUInt32() != 1129464142
+						|| reader.ReadUInt16() != 65534
+						|| reader.ReadUInt16() != 256
+						|| reader.ReadUInt32() != narc.Length
+						|| reader.ReadUInt16() != 16
+						|| reader.ReadUInt16() != 3)
+					{
+						return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					}
+
+					// FAT Signature Check
+					if (reader.ReadUInt32() != 1178686530)
+					{
+						return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					}
+
+					fat_length = reader.ReadUInt32();
+					file_count = reader.ReadUInt16();
+					reader.BaseStream.Position += 2;
+
+					// Another validity check ...
+					if (fat_length != (file_count * 8) + 12)
+					{
+						return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					}
+				}
+				else
+				{
+					fnt_offset = narc.Offset + reader.ReadUInt32();
+					fnt_length = reader.ReadUInt32();
+					fat_offset = narc.Offset + reader.ReadUInt32();
+					fat_length = reader.ReadUInt32();
+					file_count = Convert.ToUInt16(fat_length / 8);
+
+
+					reader.BaseStream.Position = fat_offset;
 				}
 
-				// FAT Signature Check
-				if (reader.ReadUInt32() != 1178686530)
-				{
-					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
-				}
-
-				uint fat_length = reader.ReadUInt32();
-				int file_count = reader.ReadUInt16();
-				reader.BaseStream.Position += 2;
-
-				// Another validity check ...
-				if (fat_length != (file_count * 8) + 12)
-				{
-					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
-				}
 
 				// The File Allocation Table contain eight bytes per file entry;
 				// a four byte file offset followed by a four byte file length.
@@ -107,13 +128,17 @@ namespace EditorNDS.FileHandlers
 					file_table[i].Length = reader.ReadUInt32() - file_table[i].Offset;
 				}
 
-				// FNT Signature check
-				if (reader.ReadUInt32() != 1179538498)
+				if ( is_nitro )
 				{
-					return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					// FNT Signature check
+					if (reader.ReadUInt32() != 1179538498)
+					{
+						return new NARC(new NDSFile[0], new NDSDirectory[0], false);
+					}
+
+					fnt_length = reader.ReadUInt32();
+					fnt_offset = narc.Offset + 16 + fat_length + 8;
 				}
-				uint fnt_length = reader.ReadUInt32();
-				uint fnt_offset = narc.Offset + 16 + fat_length + 8;
 
 				// The File Name Table contains two sections; the first is the
 				// main directory table. It's length is eight bytes per entry.
@@ -136,8 +161,8 @@ namespace EditorNDS.FileHandlers
 				// Setting up the root directory.
 				directory_table = new NDSDirectory[directory_count];
 				directory_table[0] = new NDSDirectory();
-				directory_table[0].Name = "File Table";
-				directory_table[0].Path = narc.Path + "\\File Table";
+				directory_table[0].Name = narc.Name;
+				directory_table[0].Path = narc.Path;
 
 				int[] entry_offset = new int[directory_count];
 				int[] first_file = new int[directory_count];
@@ -235,9 +260,13 @@ namespace EditorNDS.FileHandlers
 					file.Offset += narc.Offset + 16 + fat_length + fnt_length + 8;
 					file.GetExtension(stream);
 
-					if( file.Extension == ".narc" )
+					if (file.Extension == ".narc")
 					{
-						file.NARCTables = FileHandler.NARC(stream, file);
+						file.NARCTables = FileHandler.NARC(stream, file, true);
+					}
+					else if (file.Extension == ".arc")
+					{
+						file.NARCTables = FileHandler.NARC(stream, file, false);
 					}
 				}
 			}

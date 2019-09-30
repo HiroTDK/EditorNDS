@@ -30,13 +30,11 @@ namespace EditorNDS.FileHandlers
 
 		// ARM9
 		public uint ARM9Offset;                 // 0x20		ARM9 Source Address
-		public uint ARM9Entry;                  // 0x24		ARM9 Execution Start Address
 		public uint ARM9Load;                   // 0x28		ARM9 RAM Transfer Destination Address
 		public uint ARM9Length;                 // 0x2C		ARM9 Size
 
 		// ARM7
 		public uint ARM7Offset;                 // 0x30		ARM7 Source Address
-		public uint ARM7Entry;                  // 0x34		ARM7 Execution Start Address
 		public uint ARM7Load;                   // 0x38		ARM7 RAM Transfer Destination Address
 		public uint ARM7Length;                 // 0x3C		ARM7 Size
 
@@ -75,17 +73,55 @@ namespace EditorNDS.FileHandlers
 		public uint HeaderSize;                 // 0x84		Offset At Header's End
 
 		// ARM Auto-Load Parameters
-		public uint ARM9AutoParam;              // 0x88		ARM9 Auto-Load Parameters Address
-		public uint ARM7AutoParam;              // 0x8C		ARM7 Auto-Load Parameters Address
+		public uint ARM9AutoParam;              // 0x88		ARM9 Auto-Load Hook Address
+		public uint ARM7AutoParam;              // 0x8C		ARM7 Auto-Load Hook Address
 
 		// Nintendo Logo						// 0xC0		Nintendo Logo Image [0x9C]
 		public ushort NintendoLogoCRC;          // 0x15C	Nintendo Logo CRC
 		public ushort HeaderCRC;                // 0x15E	Header CRC
 		// Reserved [C]							// 0x160	Reserved For Debugging [0x20]
 
+		// Begin DSi Header
+		public uint AccessControl;				// 0x1B4	Hardware Access Control Settings
+
+		// ARM9i
+		public uint ARM9iOffset;				// 0x1C0	ARM9i Source Address
+		public uint ARM9iLoad;					// 0x1C8	ARM9i RAM Transfer Destination Address
+		public uint ARM9iLength;				// 0x1CC	ARM9i Size
+
+		// ARM7i
+		public uint ARM7iOffset;				// 0x1D0	ARM7i Source Address
+		public uint ARM7iLoad;					// 0x1D8	ARM7i RAM Transfer Destination Address
+		public uint ARM7iLength;				// 0x1DC	ARM7i Size
+
+		// Digest Tables
+		public uint DigestNitroOffset;
+		public uint DigestNitroLength;
+		public uint DigestTwilightOffset;
+		public uint DigestTwilightLength;
+		public uint DigestSectorOffset;
+		public uint DigestSectorLength;
+		public uint DigestBlockOffset;
+		public uint DisestBlockLength;
+		public uint DigestSectorSize;
+		public uint DigestBlockSectorCount;
+
+		public byte[] DigestARM9Secure;
+		public byte[] DigestARM7;
+		public byte[] DigestMaster;
+		public byte[] DigestBanner;
+		public byte[] DigestARM9i;
+		public byte[] DigestARM7i;
+		public byte[] DigestARM9Insecure;
+
+		public byte[] Signature;
+
 		// File Tables
-		public NDSFile ARM9;
-		public NDSFile ARM7;
+		public NDSFile Header;
+		public NDSBinary ARM9;
+		public NDSBinary ARM7;
+		public NDSBinary ARM9i;
+		public NDSBinary ARM7i;
 		public NDSFile[] FileTable;
 		public NDSDirectory[] DirectoryTable;
 		public NDSOverlay[] OverlayTable9;
@@ -277,43 +313,55 @@ namespace EditorNDS.FileHandlers
 				GameCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(4));
 				MakerCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(2));
 				UnitCode = reader.ReadByte();
-				DeviceType = reader.ReadByte();
-				DeviceCapaciy = reader.ReadByte();
-				reader.BaseStream.Position = 29;
-				RegionCode = reader.ReadByte();
-				Version = reader.ReadByte();
-				InternalFlags = reader.ReadByte();
+				reader.BaseStream.Position = 32;
+
 				ARM9Offset = reader.ReadUInt32();
-				ARM9Entry = reader.ReadUInt32();
+				reader.BaseStream.Position += 4;
 				ARM9Load = reader.ReadUInt32();
 				ARM9Length = reader.ReadUInt32();
+
 				ARM7Offset = reader.ReadUInt32();
-				ARM7Entry = reader.ReadUInt32();
+				reader.BaseStream.Position += 4;
 				ARM7Load = reader.ReadUInt32();
 				ARM7Length = reader.ReadUInt32();
+
 				FNTOffset = reader.ReadUInt32();
 				FNTLength = reader.ReadUInt32();
 				FATOffset = reader.ReadUInt32();
 				FATLength = reader.ReadUInt32();
+
 				ARM9OverlayOffset = reader.ReadUInt32();
 				ARM9OverlayLength = reader.ReadUInt32();
 				ARM7OverlayOffset = reader.ReadUInt32();
 				ARM7OverlayLength = reader.ReadUInt32();
-				PortNormal = reader.ReadUInt32();
-				PortKEY1 = reader.ReadUInt32();
+
+				reader.BaseStream.Position += 8;
 				BannerOffset = reader.ReadUInt32();
-				SecureCRC = reader.ReadUInt16();
-				SecureTimeout = reader.ReadUInt16();
+				reader.BaseStream.Position += 8;
+
 				ARM9AutoLoad = reader.ReadUInt32();
 				ARM7AutoLoad = reader.ReadUInt32();
-				SecureDisable = reader.ReadUInt64();
+				reader.BaseStream.Position += 8;
+
 				TotalSize = reader.ReadUInt32();
 				HeaderSize = reader.ReadUInt32();
+
 				ARM9AutoParam = reader.ReadUInt32();
 				ARM7AutoParam = reader.ReadUInt32();
-				reader.BaseStream.Position = 348;
-				NintendoLogoCRC = reader.ReadUInt16();
-				HeaderCRC = reader.ReadUInt16();
+				
+				if ( UnitCode > 0 )
+				{
+					reader.BaseStream.Position = 448;
+
+					ARM9iOffset = reader.ReadUInt32();
+					reader.BaseStream.Position += 4;
+					ARM9iLoad = reader.ReadUInt32();
+					ARM9iLength = reader.ReadUInt32();
+					ARM7iOffset = reader.ReadUInt32();
+					reader.BaseStream.Position += 4;
+					ARM7iLoad = reader.ReadUInt32();
+					ARM7iLength = reader.ReadUInt32();
+				}
 			}
 		}
 
@@ -473,19 +521,40 @@ namespace EditorNDS.FileHandlers
 				{
 					file.GetExtension(stream);
 
-					if ( file.Extension == ".bin")
+					if (file.Extension == ".narc")
 					{
-						file.NARCTables = FileHandler.NARC(stream, file);
+						file.NARCTables = FileHandler.NARC(stream, file, true);
+					}
+					else if (file.Extension == ".arc")
+					{
+						file.NARCTables = FileHandler.NARC(stream, file, false);
 					}
 				}
 
+				// Header Represented As A File
+				Header = new NDSFile();
+				Header.Name = "Header";
+				Header.Offset = 0;
+				Header.Length = 16384;
 
 				// ARM9 and ARM9 Overlay Table reading.
-				ARM9 = new NDSFile();
+				ARM9 = new NDSBinary();
 				ARM9.Name = "ARM9";
 				ARM9.Extension = ".bin";
 				ARM9.Offset = ARM9Offset;
 				ARM9.Length = ARM9Length;
+				ARM9.Load = ARM9Load;
+				ARM9.AutoLoad = ARM9AutoLoad;
+				ARM9.AutoParams = ARM9AutoParam;
+
+				if (ARM9iLength > 0)
+				{
+					ARM9i = new NDSBinary();
+					ARM9i.Name = "ARM9i";
+					ARM9i.Extension = ".bin";
+					ARM9i.Offset = ARM9iOffset;
+					ARM9i.Length = ARM9iLength;
+				}
 
 				int overlay9_count = Convert.ToInt32(ARM9OverlayLength / 32);
 				reader.BaseStream.Position = ARM9OverlayOffset;
@@ -500,29 +569,53 @@ namespace EditorNDS.FileHandlers
 					overlay.SizeBSS = reader.ReadUInt32();
 					overlay.StaticStartAddress = reader.ReadUInt32();
 					overlay.StaticEndAddress = reader.ReadUInt32();
-					overlay.File = FileTable[reader.ReadUInt32()];
-					reader.BaseStream.Position += 4;
+					overlay.ID = Convert.ToInt32( reader.ReadUInt32() );
+					overlay.Offset = FileTable[overlay.ID].Offset;
+					overlay.Length = FileTable[overlay.ID].Length;
+					uint temp = reader.ReadUInt32();
+					uint flag = temp >> 24;
+					if ((flag & 2) != 0)
+					{
+						overlay.Authenticated = true;
+					}
+					if ((flag & 1) != 0)
+					{
+						overlay.Compressed = true;
+						overlay.CompressedSize = (temp << 8) >> 8;
+					}
 
-					overlay.File.Name = "Overlay " + overlay.OverlayID;
-					overlay.File.Path = "ARM9 Overlay Table\\" + overlay.File.Name;
-					overlay.File.Extension = ".bin";
+					overlay.Name = "Overlay " + overlay.OverlayID;
+					overlay.Path = "ARM9 Overlay Table\\" + overlay.Name;
+					overlay.Extension = ".bin";
 
 					OverlayTable9[i] = overlay;
+					FileTable[overlay.ID] = overlay;
 				}
 
 				// ARM7 and ARM7 Overlay Table reading.
 				if ( ARM7Length > 0 )
 				{
-					ARM7 = new NDSFile();
+					ARM7 = new NDSBinary();
 					ARM7.Name = "ARM7";
 					ARM7.Extension = ".bin";
 					ARM7.Offset = ARM7Offset;
 					ARM7.Length = ARM7Length;
+					ARM7.Load = ARM7Load;
+					ARM7.AutoLoad = ARM7AutoLoad;
+					ARM7.AutoParams = ARM7AutoParam;
+				}
+				if ( ARM7iLength > 0 )
+				{
+					ARM7i = new NDSBinary();
+					ARM7i.Name = "ARM7i";
+					ARM7i.Extension = ".bin";
+					ARM7i.Offset = ARM7iOffset;
+					ARM7i.Length = ARM7Length;
 				}
 
 				int overlay7_count = Convert.ToInt32(ARM7OverlayLength / 32);
 				OverlayTable7 = new NDSOverlay[overlay7_count];
-				if ( overlay7_count > 0 )
+				if (overlay7_count > 0)
 				{
 					reader.BaseStream.Position = ARM7OverlayOffset;
 
@@ -535,11 +628,40 @@ namespace EditorNDS.FileHandlers
 						overlay.SizeBSS = reader.ReadUInt32();
 						overlay.StaticStartAddress = reader.ReadUInt32();
 						overlay.StaticEndAddress = reader.ReadUInt32();
-						overlay.File = FileTable[reader.ReadUInt32()];
-						reader.BaseStream.Position += 4;
+						overlay.ID = Convert.ToInt32(reader.ReadUInt32());
+						overlay.Offset = FileTable[overlay.ID].Offset;
+						overlay.Length = FileTable[overlay.ID].Length;
+						uint temp = reader.ReadUInt32();
+						uint flag = temp >> 24;
+						if ((flag & 2) != 0)
+						{
+							overlay.Authenticated = true;
+						}
+						if ((flag & 1) != 0)
+						{
+							overlay.Compressed = true;
+							overlay.CompressedSize = (temp << 8) >> 8;
+						}
+
+						overlay.Name = "Overlay " + overlay.OverlayID;
+						overlay.Path = "ARM9 Overlay Table\\" + overlay.Name;
+						overlay.Extension = ".bin";
+
+						OverlayTable7[i] = overlay;
+						FileTable[overlay.ID] = overlay;
 					}
 				}
 			}
+		}
+
+		void WriteHashTables()
+		{
+
+		}
+
+		void ReadHashTables()
+		{
+
 		}
 	}
 }
