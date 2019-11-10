@@ -24,6 +24,7 @@ namespace EditorNDS.FileHandlers
 	ushort FilesFAT = 0;					// 0x8		Number Of Files In Allocation Table
 	Reserved [FAT]							// 0xA		Reserved (0x0000)
 	byte[] FATB								// 0xC		File Allocation Table
+	// Padding (Optional)					// ?		[Optional Boundary Alignment]
 
 	//--- FNTB Data Block ---\\				// ?		[HeaderSize + SizeFAT]
 	const uint SignatureFNT = 1179538498;	// 0x0		Data Block Type (FNTB)
@@ -34,6 +35,28 @@ namespace EditorNDS.FileHandlers
 	//--- FIMG Data Block ---\\				// ?		[HeaderSize + SizeFAT + SizeFNT + Padding]
 	const uint SignatureIMG = 1179209031;	// 0x0		Data Block Type (FIMG)
 	uint SizeIMG = 0;						// 0x4		Image File Size
+	byte[] FIMG;							// 0x8		Image File
+	// Padding (Required)					// ?		[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
+
+	\*---------------------------------------------------------------------------------*/
+
+	/*----------------------------- ARC File Format -----------------------------------*\
+
+	//--- Header ---\\
+	const uint FNTOffset					// 0x0		File Name Table Offset
+	const uint FNTLength					// 0x4		File Name Table Length
+	const uint FATOffset					// 0x8		File Allocation Table Offset
+	const uint FATLength					// 0xC		File Allocation Table Length
+
+	//--- FATB Data Block ---\\				// ?		[FATOffset]
+	byte[] FATB								// 0xC		File Allocation Table
+	// Padding (Optional)					// ?		[Optional Boundary Alignment]
+
+	//--- FNTB Data Block ---\\				// ?		[FNTOffset]
+	byte[] FNTB;							// 0x8		File Name Table
+	// Padding (Optional)					// ?		[Optional Boundary Alignment]
+
+	//--- FIMG Data Block ---\\				// ?		[?]
 	byte[] FIMG;							// 0x8		Image File
 	// Padding (Required)					// ?		[Required 4-, 8-, 16-, or 32-Byte Boundary Alignment]
 

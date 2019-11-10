@@ -118,6 +118,7 @@ namespace EditorNDS.FileHandlers
 
 		// File Tables
 		public NDSFile Header;
+		public NDSBanner Banner;
 		public NDSBinary ARM9;
 		public NDSBinary ARM7;
 		public NDSBinary ARM9i;
@@ -536,6 +537,13 @@ namespace EditorNDS.FileHandlers
 				Header.Name = "Header";
 				Header.Offset = 0;
 				Header.Length = 16384;
+
+				// Header Represented As A File
+				Banner = new NDSBanner();
+				Banner.Name = "Banner";
+				Banner.Offset = BannerOffset;
+				Banner.Length = 9216;
+				Banner.ReadBanner(stream);
 
 				// ARM9 and ARM9 Overlay Table reading.
 				ARM9 = new NDSBinary();

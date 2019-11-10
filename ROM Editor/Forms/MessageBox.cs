@@ -318,9 +318,11 @@ namespace EditorNDS
 
 			this.Controls.Add(control);
 			control.TabIndex = 3;
-			control.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
-		  | System.Windows.Forms.AnchorStyles.Left )
-		  | System.Windows.Forms.AnchorStyles.Right ) ) );
+			control.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( 
+				System.Windows.Forms.AnchorStyles.Top |
+				System.Windows.Forms.AnchorStyles.Bottom ) |
+				System.Windows.Forms.AnchorStyles.Left ) |
+				System.Windows.Forms.AnchorStyles.Right ) ) );
 		}
     }
 
@@ -372,11 +374,20 @@ namespace EditorNDS
 
 	public static class CustomFormBox
 	{
-		public static DialogResult Show( Control form, string title, List<string> buttons, List<DialogResult> results )
+		public static DialogResult Show(Control form, string title, List<string> buttons, List<DialogResult> results)
 		{
-			using ( var mForm = new MessageBox(form, title, buttons, results) )
+			using (var mForm = new MessageBox(form, title, buttons, results))
 			{                                                                   // New form creating our custom message box.
-				DialogResult d = mForm.ShowDialog();                             // Shows the customized message box to the user.
+				DialogResult d = mForm.ShowDialog();                            // Shows the customized message box to the user.
+				return d;
+			}
+		}
+
+		public static DialogResult Show(Control form, string title)
+		{
+			using (var mForm = new MessageBox(form, title, new List<string> { }, new List<DialogResult>() { }))
+			{                                                                   // New form creating our custom message box.
+				DialogResult d = mForm.ShowDialog();                            // Shows the customized message box to the user.
 				return d;
 			}
 		}

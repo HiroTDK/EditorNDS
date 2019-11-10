@@ -34,6 +34,14 @@ namespace EditorNDS.FileHandlers
 			TreeNode header = new FileNode(ROM.Header);
 			romTree.Nodes.Add(header);
 
+			TreeNode banner_node = new TreeNode();
+			banner_node.Name = "Banner";
+			banner_node.Text = "Banner";
+			banner_node.Tag = ROM.Banner;
+			banner_node.ImageIndex = 12;
+			banner_node.SelectedImageIndex = 12;
+			romTree.Nodes.Add(banner_node);
+
 			TreeNode arm9_node = new TreeNode();
 			arm9_node.Text = ROM.ARM9.Name + ROM.ARM9.Extension;
 			arm9_node.Name = ROM.ARM9.Name;
@@ -52,7 +60,7 @@ namespace EditorNDS.FileHandlers
 				arm9i_node.SelectedImageIndex = 10;
 				romTree.Nodes.Add(arm9i_node);
 			}
-
+			
 			if (ROM.ARM7Length > 0)
 			{
 				TreeNode arm7_node = new TreeNode();
@@ -497,12 +505,23 @@ namespace EditorNDS.FileHandlers
 
 					grid.Refresh();
 				}
+				else if (e.Node.Tag is NDSBanner)
+				{
+					DataGridView grid = propertyView;
+					NDSBanner banner = e.Node.Tag as NDSBanner;
+
+					grid.Rows.Clear();
+
+					string[] row = new string[] { };
+					grid.Rows.Add(row);
+				}
 				else
 				{
 					DataGridView grid = propertyView;
 					NDSFile file = e.Node.Tag as NDSFile;
 
 					grid.Rows.Clear();
+					
 					string[] row = new string[] { "Name:", file.Name + file.Extension };
 					grid.Rows.Add(row);
 					row = new string[] { "Path:", file.Path };

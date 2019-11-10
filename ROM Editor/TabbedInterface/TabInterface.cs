@@ -222,6 +222,11 @@ namespace EditorNDS.TabbedInterface
 		}
 		public void CloseTab(Tab tab)
 		{
+			if (tabActivity.Count > 0)
+			{
+				ActivateTab(tabActivity.Last());
+			}
+
 			tabList.Remove(tab);
 			tabVisibility.Remove(tab);
 			tabActivity.Remove(tab);
@@ -236,7 +241,6 @@ namespace EditorNDS.TabbedInterface
 			{
 				tab.tabDocument.Dispose();
 			}
-
 			UpdateTabStrip();
 		}
 	}

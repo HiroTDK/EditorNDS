@@ -100,6 +100,8 @@
     <Compile Include="TabbedInterface\TabInterface.Designer.cs">
       <DependentUpon>TabInterface.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DataHandler.cs" />
+    <Compile Include="Utilities\ImageHandler.cs" />
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -523,9 +525,7 @@
     <None Include="Images\ArchiveWhite.png" />
     <None Include="Images\AlertWhite.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Compressors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
