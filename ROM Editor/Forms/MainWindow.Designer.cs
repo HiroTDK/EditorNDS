@@ -31,22 +31,12 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 			this.menuMain = new System.Windows.Forms.MenuStrip();
 			this.menuMainFile = new System.Windows.Forms.ToolStripMenuItem();
-			this.newPMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openPMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
-			this.newFMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.encounterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openFMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.menuFileSep2 = new System.Windows.Forms.ToolStripSeparator();
-			this.closeFMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.closeAMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.closePMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusMain = new System.Windows.Forms.StatusStrip();
 			this.statusMainLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tabInterface1 = new EditorNDS.TabbedInterface.TabInterface();
-			this.openROMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuMain.SuspendLayout();
 			this.statusMain.SuspendLayout();
 			this.SuspendLayout();
@@ -65,81 +55,17 @@
 			// menuMainFile
 			// 
 			this.menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newPMenuItem,
-            this.openPMenuItem,
-            this.menuFileSep1,
-            this.newFMenuItem,
-            this.openFMenuItem,
-            this.menuFileSep2,
-            this.closeFMenuItem,
-            this.closeAMenuItem,
-            this.closePMenuItem});
+            this.openToolStripMenuItem});
 			this.menuMainFile.Name = "menuMainFile";
 			this.menuMainFile.Size = new System.Drawing.Size(37, 18);
 			this.menuMainFile.Text = "&File";
 			// 
-			// newPMenuItem
+			// openToolStripMenuItem
 			// 
-			this.newPMenuItem.Name = "newPMenuItem";
-			this.newPMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.newPMenuItem.Text = "&NewProject ...";
-			this.newPMenuItem.Click += new System.EventHandler(this.newPMenuItem_Click);
-			// 
-			// openPMenuItem
-			// 
-			this.openPMenuItem.Name = "openPMenuItem";
-			this.openPMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.openPMenuItem.Text = "&Open Project ...";
-			// 
-			// menuFileSep1
-			// 
-			this.menuFileSep1.Name = "menuFileSep1";
-			this.menuFileSep1.Size = new System.Drawing.Size(152, 6);
-			// 
-			// newFMenuItem
-			// 
-			this.newFMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.encounterToolStripMenuItem});
-			this.newFMenuItem.Name = "newFMenuItem";
-			this.newFMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.newFMenuItem.Text = "N&ew File";
-			// 
-			// encounterToolStripMenuItem
-			// 
-			this.encounterToolStripMenuItem.Name = "encounterToolStripMenuItem";
-			this.encounterToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-			this.encounterToolStripMenuItem.Text = "Encounter";
-			// 
-			// openFMenuItem
-			// 
-			this.openFMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openROMToolStripMenuItem});
-			this.openFMenuItem.Name = "openFMenuItem";
-			this.openFMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.openFMenuItem.Text = "O&pen File ...";
-			// 
-			// menuFileSep2
-			// 
-			this.menuFileSep2.Name = "menuFileSep2";
-			this.menuFileSep2.Size = new System.Drawing.Size(152, 6);
-			// 
-			// closeFMenuItem
-			// 
-			this.closeFMenuItem.Name = "closeFMenuItem";
-			this.closeFMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.closeFMenuItem.Text = "&Close File";
-			// 
-			// closeAMenuItem
-			// 
-			this.closeAMenuItem.Name = "closeAMenuItem";
-			this.closeAMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.closeAMenuItem.Text = "Close &All";
-			// 
-			// closePMenuItem
-			// 
-			this.closePMenuItem.Name = "closePMenuItem";
-			this.closePMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.closePMenuItem.Text = "Close &Project";
+			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.openToolStripMenuItem.Text = "&Open...";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// testToolStripMenuItem
 			// 
@@ -184,13 +110,6 @@
 			this.tabInterface1.Size = new System.Drawing.Size(784, 517);
 			this.tabInterface1.TabIndex = 3;
 			// 
-			// openROMToolStripMenuItem
-			// 
-			this.openROMToolStripMenuItem.Name = "openROMToolStripMenuItem";
-			this.openROMToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.openROMToolStripMenuItem.Text = "Open &ROM";
-			this.openROMToolStripMenuItem.Click += new System.EventHandler(this.openROMToolStripMenuItem_Click);
-			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,7 +122,7 @@
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuMain;
 			this.Name = "MainWindow";
-			this.Text = "NDS NDS ROM Editor";
+			this.Text = "NDS ROM Editor";
 			this.menuMain.ResumeLayout(false);
 			this.menuMain.PerformLayout();
 			this.statusMain.ResumeLayout(false);
@@ -217,22 +136,12 @@
 
         private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.ToolStripMenuItem menuMainFile;
-        private System.Windows.Forms.ToolStripMenuItem newPMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openPMenuItem;
-        private System.Windows.Forms.ToolStripSeparator menuFileSep1;
-        private System.Windows.Forms.ToolStripMenuItem newFMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem encounterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openFMenuItem;
-        private System.Windows.Forms.ToolStripSeparator menuFileSep2;
-        private System.Windows.Forms.ToolStripMenuItem closeFMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closeAMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem closePMenuItem;
         private System.Windows.Forms.StatusStrip statusMain;
         private System.Windows.Forms.ToolStripStatusLabel statusMainLabel;
 		private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem statsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private TabbedInterface.TabInterface tabInterface1;
-		private System.Windows.Forms.ToolStripMenuItem openROMToolStripMenuItem;
 	}
 }
 

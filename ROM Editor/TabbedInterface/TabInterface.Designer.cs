@@ -70,7 +70,7 @@
 			this.TabListButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Gray;
 			this.TabListButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
 			this.TabListButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.TabListButton.Image = global::ROM_Editor.Properties.Resources.ChevronDownWhite;
+			this.TabListButton.Image = global::EditorNDS.Properties.Resources.ChevronDownWhite;
 			this.TabListButton.Location = new System.Drawing.Point(384, 0);
 			this.TabListButton.Margin = new System.Windows.Forms.Padding(0);
 			this.TabListButton.Name = "TabListButton";

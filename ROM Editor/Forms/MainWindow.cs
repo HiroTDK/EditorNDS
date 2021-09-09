@@ -63,7 +63,7 @@ namespace EditorNDS
 			return;
 		}
 
-		private void openROMToolStripMenuItem_Click(object sender, EventArgs e)
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			string file_path = "";
 

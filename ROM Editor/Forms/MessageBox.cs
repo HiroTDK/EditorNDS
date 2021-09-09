@@ -360,17 +360,26 @@ namespace EditorNDS
                 DialogResult d = form.ShowDialog();                             // Shows the customized message box to the user.
                 return d;
             }
-        }
+		}
 
-        public static DialogResult Show(string message)
-        {
-            using (var form = new MessageBox(message, "", 0, new List<string>(), new List<DialogResult>()))
-            {                                                                   // New form creating our custom message box.
-                DialogResult d = form.ShowDialog();                             // Shows the customized message box to the user.
-                return d;
-            }
-        }
-    }
+		public static DialogResult Show(string message)
+		{
+			using (var form = new MessageBox(message, "", 0, new List<string>(), new List<DialogResult>()))
+			{                                                                   // New form creating our custom message box.
+				DialogResult d = form.ShowDialog();                             // Shows the customized message box to the user.
+				return d;
+			}
+		}
+
+		public static DialogResult Show()
+		{
+			using (var form = new MessageBox("", "", 0, new List<string>(), new List<DialogResult>()))
+			{                                                                   // New form creating our custom message box.
+				DialogResult d = form.ShowDialog();                             // Shows the customized message box to the user.
+				return d;
+			}
+		}
+	}
 
 	public static class CustomFormBox
 	{

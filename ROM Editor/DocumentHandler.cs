@@ -1,4 +1,5 @@
 ﻿using EditorNDS.FileHandlers;
+using EditorNDS.ROMExplorer;
 using EditorNDS.TabbedInterface;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace EditorNDS
 		{
 			ROMViewer viewer = new ROMViewer(rom);
 			viewer.Dock = DockStyle.Fill;
-			string rom_title = "[" + rom.GameCode + "] " + rom.GameTitle;
+			string rom_title = "[" + rom.Header.GameCode + "] " + rom.Header.GameTitle;
 
 			documentTab = new Tab(tabInterface, rom_title);
 			documentTab.tabControl = viewer;

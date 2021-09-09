@@ -12,10 +12,10 @@ using System.Windows.Forms;
 namespace EditorNDS.FileHandlers
 {
 	/*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯*\
-			    Files        
+			    Files
 	\*--------------------------*/
 
-	public class NDSFile
+	public class NDSFile : BaseClass
 	{
 		public NDSFile()
 		{
@@ -158,7 +158,7 @@ namespace EditorNDS.FileHandlers
 				case "MESG":
 					Extension = ".bmg";
 					Type = "Binary Message Data";
-					CustomMessageBox.Show("Found MESG!", Path);
+					//CustomMessageBox.Show("Found MESG!", Path);
 					break;
 				case " APS":    // Particle File
 					Extension = ".spa";
@@ -485,6 +485,8 @@ namespace EditorNDS.FileHandlers
 		public string Name;
 		public string Path;
 		public int ID;
+		public int SubFolderCount;
+		public int FileCount;
 		public NDSDirectory Parent;
 		public List<NDSDirectory> Children;
 		public List<NDSFile> Contents;

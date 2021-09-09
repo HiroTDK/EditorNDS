@@ -9,7 +9,7 @@ namespace EditorNDS.FileHandlers
 {
 	class PokeTextIV
 	{
-		public PokeTextIV( Stream stream, NDSFile file )
+		public PokeTextIV( Stream stream, NitroFile file )
 		{
 			stream.Position = file.Offset;
 			Data = new byte[file.Length];
