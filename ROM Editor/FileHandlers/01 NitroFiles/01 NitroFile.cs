@@ -25,6 +25,7 @@ namespace EditorNDS.FileHandlers
 {
 	public interface INitroFile
 	{
+		bool altered { get; set; }
 		uint ID { get; set; }
 		uint Offset { get; set; }
 		uint Length { get; set; }
@@ -41,10 +42,11 @@ namespace EditorNDS.FileHandlers
 		List<string> Errors { get; set; }
 
 		INitroDirectory Parent { get; set; }
-			}
+	}
 
 	public class NitroFile : INitroFile
 	{
+		public bool altered { get; set; }
 		public uint ID { get; set; }
 		public uint Offset { get; set; }
 		public uint Length { get; set; }

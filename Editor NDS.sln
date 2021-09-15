@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDS ROM Editor", "ROM Editor\NDS ROM Editor.csproj", "{947FCFA0-F2E5-47C7-99D1-18A5CB232ADC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor NDS", "ROM Editor\Editor NDS.csproj", "{947FCFA0-F2E5-47C7-99D1-18A5CB232ADC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF6045BE-7803-4B1A-BA54-4A4B363E8590}
 	EndGlobalSection
 EndGlobal

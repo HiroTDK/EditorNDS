@@ -71,7 +71,7 @@ namespace EditorNDS
 			openFileDialog.Title = "Select a ROM to edit.";
 			openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			openFileDialog.RestoreDirectory = true;
-			openFileDialog.Filter = "NDS ROM (*.nds)|*.nds";
+			openFileDialog.Filter = "NDS/DSi ROM (*.nds;*.dsi)|*.nds;*.dsi";
 			DialogResult result = openFileDialog.ShowDialog();
 
 			// Testing the open file dialog result.
@@ -87,7 +87,7 @@ namespace EditorNDS
 			file_path = openFileDialog.FileName;
 			openFileDialog.Dispose();
 
-			NDSROM rom = new NDSROM(file_path);
+			NitroROM rom = new NitroROM(file_path);
 			new DocumentROM(TabManager.tabInterfaces.First(), rom);
 		}
 	}

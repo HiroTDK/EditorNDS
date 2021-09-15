@@ -56,7 +56,6 @@ namespace EditorNDS.ROMExplorer
 		private void InitializeNode(INitroFile file)
 		{
 			File = file;
-
 			Text = File.Name + File.Extension;
 
 			switch (file.Extension)
@@ -270,6 +269,16 @@ namespace EditorNDS.ROMExplorer
 				row.CreateCells(Grid, new string[] { "Read Error:", text, "This is a fatal read error. File read stops here." });
 				Grid.Rows.Add(row);
 			}
+		}
+		public virtual void RightClick()
+		{
+			ContextMenu context_menu = new ContextMenu
+					(new MenuItem[] {
+						new MenuItem("Open File"),
+						new MenuItem("View Hexcode"),
+						new MenuItem("Export File")
+					});
+			this.ContextMenu = context_menu;
 		}
 	}
 }

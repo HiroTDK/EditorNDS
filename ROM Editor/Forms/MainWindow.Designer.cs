@@ -122,7 +122,7 @@
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuMain;
 			this.Name = "MainWindow";
-			this.Text = "NDS ROM Editor";
+			this.Text = "Editor NDS";
 			this.menuMain.ResumeLayout(false);
 			this.menuMain.PerformLayout();
 			this.statusMain.ResumeLayout(false);

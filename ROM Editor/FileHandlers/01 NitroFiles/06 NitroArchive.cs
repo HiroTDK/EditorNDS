@@ -114,6 +114,7 @@ namespace EditorNDS.FileHandlers
 	/// </summary>
 	public class NitroArchive : INitroFile, INitroDirectory
 	{
+		public bool altered { get; set; }
 		public uint ID { get; set; }
 		public uint Offset { get; set; }
 		public uint Length { get; set; }

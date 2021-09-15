@@ -108,6 +108,7 @@
 			this.romTree.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterCollapse);
 			this.romTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterExpand);
 			this.romTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.romTree_AfterSelect);
+			this.romTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.romTree_NodeMouseClick);
 			// 
 			// propertyView
 			// 

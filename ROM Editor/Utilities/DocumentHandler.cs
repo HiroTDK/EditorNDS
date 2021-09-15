@@ -35,7 +35,7 @@ namespace EditorNDS
 
 	public class DocumentROM : DocumentHandler
 	{
-		public DocumentROM(TabInterface tabInterface, NDSROM rom)
+		public DocumentROM(TabInterface tabInterface, NitroROM rom)
 		{
 			ROMViewer viewer = new ROMViewer(rom);
 			viewer.Dock = DockStyle.Fill;

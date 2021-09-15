@@ -55,8 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomClasses.cs" />
-    <Compile Include="DocumentHandler.cs" />
+    <Compile Include="Forms\ROMExplorer\03 NodeHeader.cs" />
+    <Compile Include="Utilities\CustomClasses.cs" />
+    <Compile Include="Utilities\DocumentHandler.cs" />
     <Compile Include="FileHandlers\01 NitroFiles\00 NitroROM.cs" />
     <Compile Include="FileHandlers\01 NitroFiles\01 NitroFile.cs" />
     <Compile Include="FileHandlers\01 NitroFiles\02 NitroDirectory.cs" />
@@ -73,24 +74,24 @@
     <Compile Include="Forms\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MessageBox.cs">
+    <Compile Include="Utilities\MessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MessageBox.Designer.cs">
+    <Compile Include="Utilities\MessageBox.Designer.cs">
       <DependentUpon>MessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ROMExplorer\103 NodeBanner.cs" />
-    <Compile Include="Forms\ROMExplorer\101 NodeDirectory.cs" />
-    <Compile Include="Forms\ROMExplorer\102 NodeNARC.cs" />
-    <Compile Include="Forms\ROMExplorer\100 NodeFile.cs" />
-    <Compile Include="Forms\ROMExplorer\000 ROM Viewer.cs">
+    <Compile Include="Forms\ROMExplorer\08 NodeBanner.cs" />
+    <Compile Include="Forms\ROMExplorer\02 NodeDirectory.cs" />
+    <Compile Include="Forms\ROMExplorer\06 NodeNARC.cs" />
+    <Compile Include="Forms\ROMExplorer\01 NodeFile.cs" />
+    <Compile Include="Forms\ROMExplorer\00 ROM Viewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ROMExplorer\000 ROM Viewer.Designer.cs">
-      <DependentUpon>000 ROM Viewer.cs</DependentUpon>
+    <Compile Include="Forms\ROMExplorer\00 ROM Viewer.Designer.cs">
+      <DependentUpon>00 ROM Viewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ROMExplorer\105 NodeBinary.cs" />
-    <Compile Include="Forms\ROMExplorer\104 NodeARM.cs" />
+    <Compile Include="Forms\ROMExplorer\10 NodeBinary.cs" />
+    <Compile Include="Forms\ROMExplorer\09 NodeARM.cs" />
     <Compile Include="PokemonEditor\PokedexText.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -105,23 +106,28 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer.cs" />
-    <Compile Include="TabbedInterface\TabInterface.cs">
+    <Compile Include="Utilities\Renderer.cs" />
+    <Compile Include="TabbedInterface\00 TabInterface.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TabbedInterface\TabInterface.Designer.cs">
-      <DependentUpon>TabInterface.cs</DependentUpon>
+    <Compile Include="TabbedInterface\00 TabInterface.Designer.cs">
+      <DependentUpon>00 TabInterface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabbedInterface\01 TabManager.cs" />
+    <Compile Include="TabbedInterface\02 Tab.cs" />
+    <Compile Include="TabbedInterface\03 TabLabel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Utilities\DataHandler.cs" />
     <Compile Include="Utilities\ImageHandler.cs" />
     <EmbeddedResource Include="Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MessageBox.resx">
+    <EmbeddedResource Include="Utilities\MessageBox.resx">
       <DependentUpon>MessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ROMExplorer\000 ROM Viewer.resx">
-      <DependentUpon>000 ROM Viewer.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ROMExplorer\00 ROM Viewer.resx">
+      <DependentUpon>00 ROM Viewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PokemonEditor\PokedexText.resx">
       <DependentUpon>PokedexText.cs</DependentUpon>
@@ -140,8 +146,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TabbedInterface\TabInterface.resx">
-      <DependentUpon>TabInterface.cs</DependentUpon>
+    <EmbeddedResource Include="TabbedInterface\00 TabInterface.resx">
+      <DependentUpon>00 TabInterface.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

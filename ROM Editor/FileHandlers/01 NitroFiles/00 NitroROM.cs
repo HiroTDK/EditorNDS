@@ -19,7 +19,7 @@ using System.IO;
 
 namespace EditorNDS.FileHandlers
 {
-	public class NDSROM : BaseClass
+	public class NitroROM : BaseClass
 	{
 		public Stream File;
 		public string WorkingFile = "";
@@ -42,7 +42,7 @@ namespace EditorNDS.FileHandlers
 		/// 
 		/// </summary>
 		/// <param name="stream"></param>
-		public NDSROM(string file_path)
+		public NitroROM(string file_path)
 		{
 			MemoryStream memory_stream = new MemoryStream();
 			FileStream file_stream = new FileStream(file_path, FileMode.Open);
@@ -217,6 +217,11 @@ namespace EditorNDS.FileHandlers
 				Header.GameCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(4));
 				Header.MakerCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(2));
 				Header.UnitCode = reader.ReadByte();
+				Header.DeviceType = reader.ReadByte();
+				Header.DeviceCapaciy = reader.ReadByte();
+				Header.RegionCode = reader.ReadByte();
+				Header.Version = reader.ReadByte();
+				Header.InternalFlags = reader.ReadByte();
 				reader.BaseStream.Position = 32;
 
 				Header.ARM9Offset = reader.ReadUInt32();
@@ -276,8 +281,7 @@ namespace EditorNDS.FileHandlers
 		public void Readfile_tables()
 		{
 			if (Header.FATOffset == 0 || Header.FATLength == 0 ||
-				Header.FNTOffset == 0 || Header.FNTLength == 0 ||
-				Header.ARM9OverlayOffset == 0 || Header.ARM9OverlayLength == 0)
+				Header.FNTOffset == 0 || Header.FNTLength == 0)
 			{
 				return;
 			}

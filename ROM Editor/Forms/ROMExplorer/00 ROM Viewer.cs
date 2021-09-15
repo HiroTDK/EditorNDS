@@ -13,7 +13,7 @@ namespace EditorNDS.ROMExplorer
 {
 	public partial class ROMViewer : UserControl
 	{
-		public ROMViewer(NDSROM rom)
+		public ROMViewer(NitroROM rom)
 		{
 			ROM = rom;
 
@@ -21,7 +21,7 @@ namespace EditorNDS.ROMExplorer
 			InitializeTree();
 		}
 
-		NDSROM ROM;
+		NitroROM ROM;
 
 		private void InitializeTree()
 		{
@@ -32,20 +32,23 @@ namespace EditorNDS.ROMExplorer
 
 			romTree.BeginUpdate();
 
-			TreeNode header = new NodeFile(romTree, propertyView, ROM.Header);
+			TreeNode header = new NodeHeader(romTree, propertyView, ROM.Header);
 			NodeBanner banner = new NodeBanner(romTree, propertyView, ROM.Banner);
 
-			new NodeARM(romTree, propertyView, ROM.ARM9);
 
-			if (ROM.Header.ARM9iLength > 0)
+			if (ROM.ARM9 != null)
+			{
+				new NodeARM(romTree, propertyView, ROM.ARM9);
+			}
+			if (ROM.ARM9i != null)
 			{
 				new NodeARM(romTree, propertyView, ROM.ARM9i);
 			}
-			if (ROM.Header.ARM7Length > 0)
+			if (ROM.ARM7 != null)
 			{
 				new NodeARM(romTree, propertyView, ROM.ARM7);
 			}
-			if (ROM.Header.ARM7iLength > 0)
+			if (ROM.ARM7i != null)
 			{
 				new NodeARM(romTree, propertyView, ROM.ARM7i);
 			}
@@ -73,6 +76,7 @@ namespace EditorNDS.ROMExplorer
 
 			NodeDirectory node = new NodeDirectory(romTree, propertyView, ROM.directory_table[0]);
 
+			romTree.SelectedNode = header;
 			romTree.EndUpdate();
 		}
 
@@ -100,6 +104,18 @@ namespace EditorNDS.ROMExplorer
 			{
 				NodeFile node = e.Node as NodeFile;
 				node.DisplayNodeProperties();
+			}
+		}
+
+		private void romTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			if (e.Node is NodeFile)
+			{
+				NodeFile node = e.Node as NodeFile;
+				if (e.Button == MouseButtons.Right)
+				{
+					node.RightClick();
+				}
 			}
 		}
 	}
