@@ -40,7 +40,8 @@ namespace EditorNDS.FileHandlers
 		// Hardware/Software Information
 		public byte UnitCode;                   // 0x12		Intended Hardware: 0x0 for NDS; 0x2 For NDS+DSi; 0x3 For DSi
 		public byte DeviceType;                 // 0x13		Type Of Device Mounted Inside Cartridge
-		public byte DeviceCapaciy;              // 0x14		0x0-0x9: Megabits [1|2|4|8|16|32|64|128|256|512]; 0xA-0xF: Gigabits [1|2|4|8|16|32]
+		public byte DeviceCapacity;              // 0x14		0x0-0x9: Megabits [1|2|4|8|16|32|64|128|256|512]; 0xA-0xF: Gigabits [1|2|4|8|16|32]
+		public byte[] ReserveredA;
 		public byte RegionCode;                 // 0x1D		0x80 For China; 0x40 For Korea; 0x00 For Others
 		public byte Version;                    // 0x1E		Also Referred To As "RemasterVersion"
 		public byte InternalFlags;              // 0x1F		Auto-Load (?)
@@ -94,7 +95,8 @@ namespace EditorNDS.FileHandlers
 		public uint ARM7AutoParam;              // 0x8C		ARM7 Auto-Load Hook Address
 
 		// Nintendo Logo						// 0xC0		Nintendo Logo Image [0x9C]
-		public ushort NintendoLogoCRC;          // 0x15C	Nintendo Logo CRC
+		public ushort NintendoLogoCRC;       
+		// 0x15C	Nintendo Logo CRC
 		public ushort HeaderCRC;                // 0x15E	Header CRC
 
 		// Begin DSi Header

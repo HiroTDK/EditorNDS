@@ -218,47 +218,66 @@ namespace EditorNDS.FileHandlers
 				Header.MakerCode = System.Text.Encoding.UTF8.GetString(reader.ReadBytes(2));
 				Header.UnitCode = reader.ReadByte();
 				Header.DeviceType = reader.ReadByte();
-				Header.DeviceCapaciy = reader.ReadByte();
+				Header.DeviceCapacity = reader.ReadByte();
+				Header.ReserveredA = reader.ReadBytes(8);
+
+				reader.BaseStream.Position = 29;
 				Header.RegionCode = reader.ReadByte();
 				Header.Version = reader.ReadByte();
 				Header.InternalFlags = reader.ReadByte();
+				
 				reader.BaseStream.Position = 32;
-
 				Header.ARM9Offset = reader.ReadUInt32();
 				reader.BaseStream.Position += 4;
 				Header.ARM9Load = reader.ReadUInt32();
 				Header.ARM9Length = reader.ReadUInt32();
 
+				reader.BaseStream.Position = 48;
 				Header.ARM7Offset = reader.ReadUInt32();
 				reader.BaseStream.Position += 4;
 				Header.ARM7Load = reader.ReadUInt32();
 				Header.ARM7Length = reader.ReadUInt32();
 
+				reader.BaseStream.Position = 64;
 				Header.FNTOffset = reader.ReadUInt32();
 				Header.FNTLength = reader.ReadUInt32();
 				Header.FATOffset = reader.ReadUInt32();
 				Header.FATLength = reader.ReadUInt32();
 
+				reader.BaseStream.Position = 80;
 				Header.ARM9OverlayOffset = reader.ReadUInt32();
 				Header.ARM9OverlayLength = reader.ReadUInt32();
 				Header.ARM7OverlayOffset = reader.ReadUInt32();
 				Header.ARM7OverlayLength = reader.ReadUInt32();
 
-				reader.BaseStream.Position += 8;
-				Header.BannerOffset = reader.ReadUInt32();
-				reader.BaseStream.Position += 8;
+				reader.BaseStream.Position += 96;
+				Header.PortNormal = reader.ReadUInt32();
+				Header.PortKEY1 = reader.ReadUInt32();
 
+				reader.BaseStream.Position = 104;
+				Header.BannerOffset = reader.ReadUInt32();
+
+				reader.BaseStream.Position = 108;
+				Header.SecureCRC = reader.ReadUInt16();
+				Header.SecureTimeout = reader.ReadUInt16();
+
+				reader.BaseStream.Position = 112;
 				Header.ARM9AutoLoad = reader.ReadUInt32();
 				Header.ARM7AutoLoad = reader.ReadUInt32();
-				reader.BaseStream.Position += 8;
 
+				reader.BaseStream.Position = 120;
+				Header.SecureDisable = reader.ReadUInt64();
+
+				reader.BaseStream.Position = 128;
 				Header.TotalSize = reader.ReadUInt32();
 				Header.HeaderSize = reader.ReadUInt32();
 
+				reader.BaseStream.Position = 136;
 				Header.ARM9AutoParam = reader.ReadUInt32();
 				Header.ARM7AutoParam = reader.ReadUInt32();
 
 				if (Header.UnitCode > 0)
+				Header.NintendoLogoCRC = reader.ReadUInt16();
 				{
 					reader.BaseStream.Position = 448;
 
